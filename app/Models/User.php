@@ -20,6 +20,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'user_type', // Added date 09/16/2024 // Admin, Faculty
+        'program', // Added date 09/16/2024 // BSIT, COMSC, etc.
+        'position', // Added date 09/16/2024 // Permanent, Temporary, Part-Timer
+        'units', // Added date 09/16/2024 // 3 units, 2 units, etc.
+        'clearances_status', // Added date 09/16/2024 // pending, return, complete
+        'last_clearance_update', // Added date 09/16/2024 // date when last clearance update was made
+        'checked_by', // Added date 09/16/2024 // name of the person who checked the clearance
     ];
 
     /**
@@ -42,6 +49,9 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'last_clearance_update' => 'timestamp', // Cast to date
+            'clearances_status' => 'string', // Cast to string (if using enum)
+
         ];
     }
 }

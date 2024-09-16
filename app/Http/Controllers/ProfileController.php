@@ -32,6 +32,12 @@ class ProfileController extends Controller
             $request->user()->email_verified_at = null;
         }
 
+        $request->user()->clearances_status = 'pending';
+        $request->user()->checked_by = 'System';
+        $request->user()->program = $request->input('program');
+        $request->user()->position = $request->input('position');
+        $request->user()->units = $request->input('units');
+
         $request->user()->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');

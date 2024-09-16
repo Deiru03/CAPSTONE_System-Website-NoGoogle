@@ -47,6 +47,42 @@
             @endif
         </div>
 
+        <div>
+            <x-input-label for="user_type" :value="__('User Type')" />
+            <x-text-input id="user_type" name="user_type" type="text" class="mt-1 block w-full" :value="old('user_type', $user->user_type)" required autocomplete="user_type" disabled readonly />
+            <x-input-error class="mt-2" :messages="$errors->get('user_type')" />
+        </div>
+
+        <div>
+            <x-input-label for="program" :value="__('Program')" />
+            <x-text-input id="program" name="program" type="text" class="mt-1 block w-full" :value="old('program', $user->program)" required autocomplete="program" />
+            <x-input-error class="mt-2" :messages="$errors->get('program')" />
+        </div>
+
+        <div>
+            <x-input-label for="position" :value="__('Position')" />
+            <select id="position" name="position" class="mt-1 block w-full" required>
+                <option value="Permanent" {{ old('position', $user->position) === 'Permanent' ? 'selected' : '' }}>Permanent</option>
+                <option value="Temporary" {{ old('position', $user->position) === 'Temporary' ? 'selected' : '' }}>Temporary</option>
+                <option value="Part-Timer" {{ old('position', $user->position) === 'Part-Timer' ? 'selected' : '' }}>Part-Timer</option>
+            </select>
+            <x-input-error class="mt-2" :messages="$errors->get('position')" />
+        </div>
+
+        <div>
+            <x-input-label for="units" :value="__('Units')" />
+            <x-text-input id="units" name="units" type="number" class="mt-1 block w-full" :value="old('units', $user->units)" required autocomplete="units" />
+            <x-input-error class="mt-2" :messages="$errors->get('units')" />
+        </div>
+
+        <div>
+            <x-input-label for="clearances_status" :value="__('Clearances Status')" />
+            <x-text-input id="clearances_status" name="clearances_status" type="text" class="mt-1 block w-full" :value="$user->clearances_status" required autocomplete="clearances_status" disabled readonly />
+            <x-input-error class="mt-2" :messages="$errors->get('clearances_status')" />
+        </div>
+        
+        
+
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 
