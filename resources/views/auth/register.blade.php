@@ -2,14 +2,27 @@
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
-        <!-- User Type -->
-        <div class="mt-4">
-            <x-input-label for="user_type" :value="__('User Type')" />
+        <div class="flex space-x-4">
+            <!-- User Type -->
+            <div class="mt-4 w-1/2">
+                <x-input-label for="user_type" :value="__('User Type')" />
                 <select id="user_type" name="user_type" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                     <option value="Faculty" selected>Faculty</option>
                     <option value="Admin">Admin</option>
                 </select>
-            <x-input-error :messages="$errors->get('user_type')" class="mt-2" />
+                <x-input-error :messages="$errors->get('user_type')" class="mt-2" />
+            </div>
+
+            <!-- Position -->
+            <div class="mt-4 w-1/2">
+                <x-input-label for="position" :value="__('Position')" />
+                <select id="position" name="position" :value="old('position')" required autocomplete="position" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <option value="Permanent">Permanent</option>
+                    <option value="Temporary">Temporary</option>
+                    <option value="Part-Timer">Part-Timer</option>
+                </select>
+                <x-input-error :messages="$errors->get('position')" class="mt-2" />
+            </div>
         </div>
 
         <!-- Name -->
@@ -31,17 +44,6 @@
             <x-input-label for="program" :value="__('Program')" />
             <x-text-input id="program" class="block mt-1 w-full" type="text" name="program" :value="old('program')" required autocomplete="program" />
             <x-input-error :messages="$errors->get('program')" class="mt-2" />
-        </div>
-        
-        <!-- Position -->
-        <div class="mt-4">
-            <x-input-label for="position" :value="__('Position')" />
-            <select id="position" name="position" :value="old('position')" required autocomplete="position" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                <option value="Permanent">Permanent</option>
-                <option value="Temporary">Temporary</option>
-                <option value="Part-Timer">Part-Timer</option>
-            </select>
-            <x-input-error :messages="$errors->get('position')" class="mt-2" />
         </div>
 
         <!-- Password -->
