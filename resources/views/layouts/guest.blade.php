@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'Register') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -26,6 +26,7 @@
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
             <div>
                 <a href="/">
+                    {{--<x-application-logo class="block h-9 w-auto fill-current text-gray-800" /> "Component Ito kahit saan pwede gamitin" --}}
                     <img src="{{ asset('images/OMSCLogo.png') }}" alt="OMSC Logo" class="w-32 h-32" />
                 </a>
             </div>
