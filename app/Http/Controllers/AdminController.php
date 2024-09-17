@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Views\Admin;
 /////////////////////////////////////////////// Admin ViewsController ////////////////////////////////////////////////
@@ -43,9 +47,29 @@ class AdminController extends Controller
         return view ('admin.views.submitted-reports');
     }
 
-    public function faculty(): View
+    public function faculty(Request $request): View
     {
-        return view ('admin.views.faculty');
+        $faculty = User::all();
+        $query = User::query();
+
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%')
+                  ->orWhere('program', 'like', '%' . $search . '%')
+                  ->orWhere('position', 'like', '%' . $search . '%')
+                  ->orWhere('units', 'like', '%' . $search . '%');
+        }
+
+        if ($request->has('sort')) {
+            $sort = $request->input('sort');
+            $query->orderBy('id', $sort);
+        }
+
+
+        $faculty = $query->paginate(10);
+
+        return view ('admin.views.faculty', compact('faculty'));
     }
 
     public function myFiles(): View
@@ -63,5 +87,60 @@ class AdminController extends Controller
         $user = Auth::user();
         return view ('admin.profile.edit', compact('user'));
     }
-    /////////////////////////////////////////////// End of Admin Views Controller ////////////////////////////////////////////////
+    /////////////////////////////////////////////// End of Views Controller ////////////////////////////////////////////////
+
+    /////////////////////////////////////////////// Edit Faculty /////////////////////////////////////////////////
+    public function getFacultyData($id)
+    {
+        try {
+            $facultyMember = User::findOrFail($id);
+            return response()->json(['success' => true, 'faculty' => $facultyMember]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching faculty member: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Failed to fetch faculty member.'], 500);
+        }
+    }
+
+    public function editFaculty(Request $request)
+    {
+        $validatedData = $request->validate([
+            'id' => 'required|exists:users,id',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'program' => 'nullable|string|max:255',
+            'units' => 'nullable|integer',
+            'position' => 'nullable|string|max:255',
+        ]);
+
+        try {
+            $facultyMember = User::findOrFail($validatedData['id']);
+            $facultyMember->update($validatedData);
+
+            return response()->json(['success' => true, 'message' => 'Faculty member updated successfully.']);
+        } catch (\Exception $e) {
+            Log::error('Error updating faculty member: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Failed to update faculty member.'], 500);
+        }
+    }
+
+    public function deleteFaculty(Request $request, $id)
+    {
+        try {
+            $facultyMember = User::findOrFail($id);
+
+            // Optional: Prevent deletion of certain users
+            // if ($facultyMember->user_type !== 'Faculty') {
+            //     return response()->json(['success' => false, 'message' => 'Invalid user type.'], 400);
+            // }
+
+            $facultyMember->delete();
+
+            return response()->json(['success' => true, 'message' => 'Faculty member deleted successfully.']);
+        } catch (\Exception $e) {
+            Log::error('Error deleting faculty member: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Failed to delete faculty member.'], 500);
+        }
+    }
+
+   
 }

@@ -47,7 +47,13 @@ Route::middleware(['auth', 'verified', 'Admin'])->prefix('admin')->group(functio
     Route::get('/my-files', [AdminController::class, 'myFiles'])->name('admin.views.myFiles');
     Route::get('/archive', [AdminController::class, 'archive'])->name('admin.views.archive');
     Route::get('/profile', [AdminController::class, 'profileEdit'])->name('admin.profile.edit');
+
+    //////////////////////// Edit Faculty //////////////////////
+    Route::get('/faculty/edit/{id}', [AdminController::class, 'getFacultyData'])->name('admin.faculty.getData'); // Get Faculty Data
+    Route::post('/faculty/edit', [AdminController::class, 'editFaculty'])->name('admin.faculty.edit'); // Edit Faculty
+    Route::delete('/faculty/delete/{id}', [AdminController::class, 'deleteFaculty'])->name('admin.faculty.delete'); // Delete Faculty
 });
+
 
 /////////////////////////////////////////////// End of Admin Routes ////////////////////////////////////////////////
 /////////////////////////////////////////////// Faculty Routes ////////////////////////////////////////////////
