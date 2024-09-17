@@ -13,10 +13,24 @@ class AdminController extends Controller
 {
     public function dashboard(): View
     {
-        if (Auth::check() && Auth::user()->user_type === 'Admin') {
-            return view('admindashboard');
+        //////////////////////// Clearance Counts //////////////////////////
+        $TotalUser = User::count();
+        $clearancePending = User::where('clearances_status', 'pending')->count();
+        $clearanceComplete = User::where('clearances_status', 'complete')->count();
+        $clearanceReturn = User::where('clearances_status', 'return')->count();
+        $clearanceTotal = $clearancePending + $clearanceComplete + $clearanceReturn;
+        //////////////////////// Faculty Counts //////////////////////////
+        $facultyPermanent = User::where('position', 'Permanent')->count();
+        $facultyTemporary = User::where('position', 'Temporary')->count();
+        $facultyPartTime = User::where('position', 'Part-Time')->count();
+
+        if (Auth::check() && Auth::user()->user_type === 'Faculty') {
+            return view('dashboard');
         }
-        return view('dashboard');
+        //////////////////////// Dashboard Throw Variables //////////////////////////
+        return view('admindashboard', compact('TotalUser', 'clearancePending',
+         'clearanceComplete', 'clearanceReturn', 'clearanceTotal',
+         'facultyPermanent', 'facultyTemporary', 'facultyPartTime'));
     }
 
     public function clearances(): View

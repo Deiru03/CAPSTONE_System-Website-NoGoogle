@@ -13,10 +13,10 @@ class FacultyController extends Controller
     //////////////////////////////////////////////// Views Controller ////////////////////////////////////////////////  
     public function dashboard(): View
     {
-        if (Auth::check() && Auth::user()->user_type === 'Faculty') {
-            return view('dashboard');
+        if (Auth::check() && Auth::user()->user_type === 'Admin') {
+            return view('admindashboard');
         }
-        return view('admindashboard'); // E redirect sa admin dashboard kun di sya admin bala
+        return view('dashboard'); // E redirect sa admin dashboard kun di sya admin bala
     }
     public function clearances(): View
     {
