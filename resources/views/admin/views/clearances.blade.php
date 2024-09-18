@@ -8,16 +8,43 @@
         <!-- Other head elements -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <h3 class="text-lg font-medium">Clearances</h3>
-                    <p class="mt-2">Here you can view and manage clearances.</p>
-                    <!-- Add your Clearances management content here -->
-                </div>
-            </div>            
+    <div class="mb-0 flex justify-end space-x-4">
+        <a href="" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+            <span class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                Check Clearances
+            </span>
+        </a>
+        <a href="" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+            <span class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                </svg>
+                Manage Clearances
+            </span>
+        </a>
+    </div>
+    <div class="py-10">
+        <h2 class="text-3xl font-bold mb-4 text-indigo-600 border-b pb-2">Clearance Management</h2>
+        <p class="text-gray-600 mb-6">Here you can view and manage faculty clearances efficiently.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-green-100 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1">
+                <h3 class="text-lg font-semibold text-green-700 mb-2">Complete</h3>
+                <p class="text-3xl font-bold text-green-800">{{ $clearance->where('clearances_status', 'complete')->count() }}</p>
+            </div>
+            <div class="bg-red-100 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1">
+                <h3 class="text-lg font-semibold text-red-700 mb-2">Pending</h3>
+                <p class="text-3xl font-bold text-red-800">{{ $clearance->where('clearances_status', 'pending')->count() }}</p>
+            </div>
+            <div class="bg-yellow-100 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-1">
+                <h3 class="text-lg font-semibold text-yellow-700 mb-2">Return</h3>
+                <p class="text-3xl font-bold text-yellow-800">{{ $clearance->where('clearances_status', 'return')->count() }}</p>
+            </div>
         </div>
+    </div>
+        
 
          <!-- Search and Filter Form -->
          <form method="GET" action="{{ route('admin.views.clearances') }}" class="mb-4 flex items-center">
