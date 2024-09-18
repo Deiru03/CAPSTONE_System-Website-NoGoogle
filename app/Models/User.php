@@ -49,7 +49,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'last_clearance_update' => 'timestamp', // Cast to date
+            'last_clearance_update' => 'datetime', // Cast to date
             'clearances_status' => 'string', // Cast to string (if using enum)
 
         ];
