@@ -174,20 +174,33 @@ class AdminController extends Controller
                 'checked_by' => 'required|string|max:255',
                 // Note: 'last_clearance_update' is managed server-side
             ]);
-    
+            
             // Retrieve the user
             $user = User::findOrFail($validated['id']);
-    
+            Log::info('Before setting, last_clearance_update:', [
+                'type' => gettype($user->last_clearance_update),
+                'value' => $user->last_clearance_update,
+            ]);
             // Update clearance status and checked by fields
             $user->clearances_status = $validated['clearances_status'];
             $user->checked_by = $validated['checked_by'];
     
             // Set 'last_clearance_update' to the current timestamp using Carbon
             $user->last_clearance_update = now();
-    
+            Log::info('After setting, last_clearance_update:', [
+                'type' => gettype($user->last_clearance_update),
+                'value' => $user->last_clearance_update,
+            ]);
             // Save the changes
             $user->save();
-    
+            
+            // Log after saving
+            Log::info('After saving, last_clearance_update:', [
+                'type' => gettype($user->last_clearance_update),
+                'value' => $user->last_clearance_update,
+            ]);
+
+
             // Return a success response with the updated user data
             return response()->json([
                 'success' => true,
