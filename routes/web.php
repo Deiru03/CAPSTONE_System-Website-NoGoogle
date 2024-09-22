@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FacultyController;
+use App\Http\Controllers\Admin\ClearanceController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use App\Models\User;
@@ -52,8 +53,22 @@ Route::middleware(['auth', 'verified', 'Admin'])->prefix('admin')->group(functio
     Route::get('/faculty/edit/{id}', [AdminController::class, 'getFacultyData'])->name('admin.faculty.getData'); // Get Faculty Data
     Route::post('/faculty/edit', [AdminController::class, 'editFaculty'])->name('admin.faculty.edit'); // Edit Faculty
     Route::delete('/faculty/delete/{id}', [AdminController::class, 'deleteFaculty'])->name('admin.faculty.delete'); // Delete Faculty
-    ////////////////////////Clearance Update//////////////////////
     Route::post('/clearance/update', [AdminController::class, 'updateFacultyClearanceUser'])->name('admin.views.update-clearance'); // Update Clearance
+
+    // Clearance Management
+    Route::get('/clearance', [ClearanceController::class, 'index'])->name('admin.clearance.manage');
+    Route::post('/clearance/store', [ClearanceController::class, 'store'])->name('admin.clearance.store');
+    Route::get('/clearance/edit/{id}', [ClearanceController::class, 'edit'])->name('admin.clearance.edit');
+    Route::post('/clearance/update/{id}', [ClearanceController::class, 'update'])->name('admin.clearance.update');
+    Route::delete('/clearance/delete/{id}', [ClearanceController::class, 'destroy'])->name('admin.clearance.destroy');
+
+    Route::prefix('clearance/{clearanceId}/requirements')->group(function () {
+        Route::get('/', [ClearanceController::class, 'requirements'])->name('admin.clearance.requirements');
+        Route::post('/store', [ClearanceController::class, 'storeRequirement'])->name('admin.clearance.requirements.store');
+        Route::get('/edit/{requirementId}', [ClearanceController::class, 'editRequirement'])->name('admin.clearance.requirements.edit');
+        Route::post('/update/{requirementId}', [ClearanceController::class, 'updateRequirement'])->name('admin.clearance.requirements.update');
+        Route::delete('/delete/{requirementId}', [ClearanceController::class, 'destroyRequirement'])->name('admin.clearance.requirements.destroy');
+    });
 });
 
 
