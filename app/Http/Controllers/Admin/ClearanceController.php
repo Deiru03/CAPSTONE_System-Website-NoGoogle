@@ -100,13 +100,33 @@ class ClearanceController extends Controller
     }
 
     ///////////////////////////////////////// Clearance Requirements ///////////////////////////////////////
-     /**
+      ///////////////////////////////////////// Clearance Requirements ///////////////////////////////////////
+    /**
      * Display the requirements for a specific clearance.
      */
-    public function requirements($clearanceId)
+    public function requirements(Request $request, $clearanceId)
     {
-        $clearance = Clearance::with('requirements')->findOrFail($clearanceId);
-        return view('admin.views.clearances.clearance-requirements', compact('clearance'));
+        $clearance = Clearance::with('requirements')->find($clearanceId);
+        if ($request->ajax()) {
+            if ($clearance) {
+                return response()->json([
+                    'success' => true,
+                    'requirements' => $clearance->requirements,
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Clearance not found.'
+                ], 404);
+            }
+        } else {
+            // If not AJAX, load the requirements blade view
+            if ($clearance) {
+                return view('admin.views.clearances.clearance-requirements', compact('clearance'));
+            } else {
+                abort(404);
+            }
+        }
     }
 
     /**
@@ -120,19 +140,18 @@ class ClearanceController extends Controller
             'requirement' => 'required|string|max:255',
         ]);
 
-        $clearance->requirements()->create([
+        $requirement = $clearance->requirements()->create([
             'requirement' => $request->requirement,
         ]);
 
         // Update the number_of_requirements
-        $clearance->update([
-            'number_of_requirements' => $clearance->requirements()->count(),
-        ]);
+        $clearance->number_of_requirements = $clearance->requirements()->count();
+        $clearance->save();
 
         return response()->json([
             'success' => true,
             'message' => 'Requirement added successfully.',
-            'requirement' => $clearance->requirements()->latest()->first(),
+            'requirement' => $requirement,
         ]);
     }
 
@@ -141,12 +160,19 @@ class ClearanceController extends Controller
      */
     public function editRequirement($clearanceId, $requirementId)
     {
-        $requirement = ClearanceRequirement::where('clearance_id', $clearanceId)->findOrFail($requirementId);
+        $requirement = ClearanceRequirement::where('clearance_id', $clearanceId)->find($requirementId);
 
-        return response()->json([
-            'success' => true,
-            'requirement' => $requirement,
-        ]);
+        if ($requirement) {
+            return response()->json([
+                'success' => true,
+                'requirement' => $requirement,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Requirement not found.'
+            ], 404);
+        }
     }
 
     /**
@@ -154,7 +180,14 @@ class ClearanceController extends Controller
      */
     public function updateRequirement(Request $request, $clearanceId, $requirementId)
     {
-        $requirement = ClearanceRequirement::where('clearance_id', $clearanceId)->findOrFail($requirementId);
+        $requirement = ClearanceRequirement::where('clearance_id', $clearanceId)->find($requirementId);
+
+        if (!$requirement) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Requirement not found.'
+            ], 404);
+        }
 
         $request->validate([
             'requirement' => 'required|string|max:255',
@@ -176,14 +209,21 @@ class ClearanceController extends Controller
      */
     public function destroyRequirement($clearanceId, $requirementId)
     {
-        $requirement = ClearanceRequirement::where('clearance_id', $clearanceId)->findOrFail($requirementId);
+        $requirement = ClearanceRequirement::where('clearance_id', $clearanceId)->find($requirementId);
+
+        if (!$requirement) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Requirement not found.'
+            ], 404);
+        }
+
         $requirement->delete();
 
         // Update the number_of_requirements
         $clearance = Clearance::findOrFail($clearanceId);
-        $clearance->update([
-            'number_of_requirements' => $clearance->requirements()->count(),
-        ]);
+        $clearance->number_of_requirements = $clearance->requirements()->count();
+        $clearance->save();
 
         return response()->json([
             'success' => true,
