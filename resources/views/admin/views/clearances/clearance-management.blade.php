@@ -692,8 +692,9 @@
         /**
          * Handle Edit Requirement Form Submission
          */
+        // Edit Requirement AJAX Submission
         document.getElementById('editRequirementForm').addEventListener('submit', function(event) {
-            event.preventDefault();
+            event.preventDefault(); // prevent default form submission
 
             const requirementId = document.getElementById('editRequirementId').value;
             const updatedRequirement = document.getElementById('editRequirementInput').value.trim();
@@ -703,7 +704,7 @@
                 return;
             }
 
-            fetch(`/admin/clearance/updateRequirement/${currentClearanceId}/${requirementId}`, {
+            fetch(`/admin/clearance/${currentClearanceId}/requirements/update/${requirementId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -775,8 +776,8 @@
             event.preventDefault();
 
             const requirementId = document.getElementById('deleteRequirementId').value;
-
-            fetch(`/admin/clearance/deleteRequirement/${currentClearanceId}/${requirementId}`, {
+            
+            fetch(`/admin/clearance/${currentClearanceId}/requirements/delete/${requirementId}`, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
