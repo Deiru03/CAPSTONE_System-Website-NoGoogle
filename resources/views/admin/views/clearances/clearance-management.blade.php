@@ -437,7 +437,6 @@
                 alert('An error occurred while updating the clearance.');
             });
         });
-v
         // Delete Modal Functions
         let currentDeleteId;
 
