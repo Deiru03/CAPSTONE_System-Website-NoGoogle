@@ -8,11 +8,16 @@
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 shadow-lg border border-gray-300">
         <div class="p-6 text-gray-900">
-            <h2 class="text-2xl font-bold mb-4">Manage Clearance Checklists</h2>
-            <p>Here you can create and manage clearance checklists.</p>
+            <h2 class="text-3xl font-extrabold mb-6 text-indigo-600 animate-pulse">Manage Clearance Checklists</h2>
+            <p class="text-lg mb-4">Here you can create and manage clearance checklists.</p>
             <!-- Add Button -->
-            <button onclick="openAddModal()" class="mt-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
-                Add Clearance Checklist
+            <button onclick="openAddModal()" class="mt-4 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition duration-300 hover:scale-105">
+                <span class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                    </svg>
+                    Add Clearance Checklist
+                </span>
             </button>
         </div>
 
@@ -72,6 +77,13 @@
                                     </svg>
                                     Manage Reqs
                                 </button>
+                                <button onclick="openSendClearanceModal({{ $clearance->id }}, '{{ addslashes($clearance->document_name) }}')" class="text-yellow-600 hover:text-yellow-800 flex items-center text-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                                        <path fill-rule="evenodd" d="M5 5a2 2 0 012-2h6a2 2 0 012 2v2a1 1 0 01-1 1H6a1 1 0 01-1-1V5z" clip-rule="evenodd" />
+                                    </svg>
+                                    Send Clearance
+                                </button>
                                 </div>
                                 </div>
                             </td>
@@ -86,7 +98,12 @@
     <!-- Add Modal -->
     <div id="addModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
         <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full relative">
-            <h3 class="text-2xl font-semibold mb-4 text-gray-800">Add Clearance Checklist</h3>
+            <h3 class="text-2xl font-semibold mb-4 text-gray-800 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Add Clearance Checklist
+            </h3>
             <form id="addForm" method="POST" action="{{ route('admin.clearance.store') }}">
                 @csrf
                 <div class="space-y-4">
@@ -113,8 +130,18 @@
                     </div>
                 </div>
                 <div class="mt-6 flex justify-end space-x-3">
-                    <button type="button" onclick="closeAddModal()" class="px-4 py-2 border border-gray-300 rounded-md">Cancel</button>
-                    <button type="submit" class="px-4 py-2 border border-transparent rounded-md bg-green-600 text-white">Add</button>
+                    <button type="button" onclick="closeAddModal()" class="px-4 py-2 border border-gray-300 rounded-md flex items-center transition duration-300 ease-in-out transform hover:scale-105 hover:bg-gray-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 border border-transparent rounded-md bg-green-600 text-white flex items-center transition duration-300 ease-in-out transform hover:scale-105 hover:bg-green-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        Add
+                    </button>
                 </div>
             </form>
             <div id="addNotification" class="hidden mt-2 text-green-600"></div>
@@ -199,17 +226,17 @@
 
             <!-- Add Requirement Modal (Nested) -->
             <div id="addRequirementModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
-                <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
+                <div class="bg-white p-6 rounded-lg shadow-lg max-w-xl w-full relative">
                     <h4 class="text-xl font-semibold mb-4 text-gray-800">Add Requirement</h4>
                     <form id="addRequirementForm">
                         @csrf
                         <div class="mb-4">
                             <label for="newRequirement" class="block text-sm font-medium text-gray-700">Requirement</label>
-                            <input type="text" id="newRequirement" name="requirement" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                            <textarea id="newRequirement" name="requirement" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-40 resize-y" required></textarea>
                         </div>
                         <div class="flex justify-end space-x-2">
-                            <button type="button" onclick="closeAddRequirementModal()" class="px-4 py-2 border border-gray-300 rounded-md">Cancel</button>
-                            <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md">Add</button>
+                            <button type="button" onclick="closeAddRequirementModal()" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-200 transition duration-200 transform hover:scale-105">Cancel</button>
+                            <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition duration-200 transform hover:scale-105">Add</button>
                         </div>
                     </form>
                     <div id="addRequirementNotification" class="hidden mt-2 text-green-600"></div>
@@ -218,18 +245,18 @@
 
             <!-- Edit Requirement Modal (Nested) -->
             <div id="editRequirementModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
-                <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full relative">
+                <div class="bg-white p-6 rounded-lg shadow-lg max-w-xl w-full relative">
                     <h4 class="text-xl font-semibold mb-4 text-gray-800">Edit Requirement</h4>
                     <form id="editRequirementForm">
                         @csrf
                         <input type="hidden" id="editRequirementId">
                         <div class="mb-4">
                             <label for="editRequirementInput" class="block text-sm font-medium text-gray-700">Requirement</label>
-                            <input type="text" id="editRequirementInput" name="requirement" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                            <textarea id="editRequirementInput" name="requirement" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-40 resize-y" required></textarea>
                         </div>
                         <div class="flex justify-end space-x-2">
-                            <button type="button" onclick="closeEditRequirementModal()" class="px-4 py-2 border border-gray-300 rounded-md">Cancel</button>
-                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md">Save</button>
+                            <button type="button" onclick="closeEditRequirementModal()" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-200 transition duration-200 transform hover:scale-105">Cancel</button>
+                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200 transform hover:scale-105">Save</button>
                         </div>
                     </form>
                     <div id="editRequirementNotification" class="hidden mt-2 text-blue-600"></div>
@@ -485,8 +512,7 @@
                 alert('An error occurred while deleting the clearance.');
             });
         });
-    </script>
-     <script>
+
         // =============================================
         // Edit Requirements Modal Functions
         // =============================================
@@ -554,10 +580,10 @@
                     <td class="px-4 py-2 border">${req.id}</td>
                     <td class="px-4 py-2 border">${req.requirement}</td>
                     <td class="px-4 py-2 border">
-                        <button onclick="openEditRequirementModal(${req.id}, '${escapeHtml(req.requirement)}')" class="text-blue-500 mr-2">
+                        <button onclick="openEditRequirementModal(${currentClearanceId}, ${req.id})" class="text-blue-500 mr-2">
                             Edit
                         </button>
-                        <button onclick="openDeleteRequirementModal(${req.id}, '${escapeHtml(req.requirement)}')" class="text-red-500">
+                        <button onclick="openDeleteRequirementModal(${currentClearanceId}, ${req.id}, '${escapeHtml(req.requirement)}')" class="text-red-500">
                             Delete
                         </button>
                     </td>
@@ -580,119 +606,84 @@
             return text.replace(/[&<>"']/g, function(m) { return map[m]; });
         }
 
-        // =============================================
         // Add Requirement Modal Functions
-        // =============================================
-
-        /**
-         * Open Add Requirement Modal
-         */
         function openAddRequirementModal() {
             document.getElementById('addRequirementModal').classList.remove('hidden');
         }
 
-        /**
-         * Close Add Requirement Modal
-         */
         function closeAddRequirementModal() {
             document.getElementById('addRequirementModal').classList.add('hidden');
             document.getElementById('addRequirementForm').reset();
             document.getElementById('addRequirementNotification').classList.add('hidden');
         }
 
-        /**
-         * Handle Add Requirement Form Submission
-         */
         document.getElementById('addRequirementForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            const requirementInput = document.getElementById('newRequirement').value.trim();
-            if (requirementInput === '') {
-                alert('Requirement cannot be empty.');
-                return;
-            }
+            const addRequirementNotification = document.getElementById('addRequirementNotification');
+            addRequirementNotification.classList.add('hidden');
+
+            const formData = {
+                requirement: document.getElementById('newRequirement').value,
+            };
 
             fetch(`/admin/clearance/${currentClearanceId}/requirements/store`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                     'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
                 },
-                body: JSON.stringify({ requirement: requirementInput }),
+                body: JSON.stringify(formData),
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Append the new requirement to the table
-                    const tbody = document.getElementById('requirementsTableBody');
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td class="px-4 py-2 border">${data.requirement.id}</td>
-                        <td class="px-4 py-2 border">${data.requirement.requirement}</td>
-                        <td class="px-4 py-2 border">
-                            <button onclick="openEditRequirementModal(${data.requirement.id}, '${escapeHtml(data.requirement.requirement)}')" class="text-blue-500 mr-2">
-                                Edit
-                            </button>
-                            <button onclick="openDeleteRequirementModal(${data.requirement.id}, '${escapeHtml(data.requirement.requirement)}')" class="text-red-500">
-                                Delete
-                            </button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-
-                    // Update the number of requirements
-                    updateNumberOfRequirements();
-
-                    // Show success notification
-                    const notification = document.getElementById('addRequirementNotification');
-                    notification.innerText = data.message;
-                    notification.classList.remove('hidden');
-
-                    // Reset the form
-                    this.reset();
-
-                    // Hide the notification after 3 seconds
-                    setTimeout(() => {
-                        notification.classList.add('hidden');
-                    }, 3000);
+                    closeAddRequirementModal();
+                    fetchRequirements(currentClearanceId);
                 } else {
-                    alert(data.message || 'Failed to add requirement.');
+                    addRequirementNotification.classList.remove('hidden');
+                    addRequirementNotification.innerText = data.message;
                 }
             })
             .catch(error => {
-                console.error('Error adding requirement:', error);
+                console.error('Error:', error);
                 alert('An error occurred while adding the requirement.');
             });
         });
 
-        // =============================================
         // Edit Requirement Modal Functions
-        // =============================================
-
-        /**
-         * Open Edit Requirement Modal
-         */
-        function openEditRequirementModal(requirementId, requirementName) {
-            document.getElementById('editRequirementId').value = requirementId;
-            document.getElementById('editRequirementInput').value = requirementName;
-            document.getElementById('editRequirementModal').classList.remove('hidden');
+        function openEditRequirementModal(clearanceId, requirementId) {
+            // Fetch the latest requirement data
+            fetch(`/admin/clearance/${clearanceId}/requirements/edit/${requirementId}`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('editRequirementId').value = data.requirement.id;
+                    document.getElementById('editRequirementInput').value = data.requirement.requirement;
+                    document.getElementById('editRequirementModal').classList.remove('hidden');
+                } else {
+                    alert('Failed to fetch requirement data.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching requirement data:', error);
+                alert('An error occurred while fetching requirement data.');
+            });
         }
 
-        /**
-         * Close Edit Requirement Modal
-         */
         function closeEditRequirementModal() {
             document.getElementById('editRequirementModal').classList.add('hidden');
             document.getElementById('editRequirementForm').reset();
             document.getElementById('editRequirementNotification').classList.add('hidden');
         }
 
-        /**
-         * Handle Edit Requirement Form Submission
-         */
-        // Edit Requirement AJAX Submission
         document.getElementById('editRequirementForm').addEventListener('submit', function(event) {
             event.preventDefault(); // prevent default form submission
 
@@ -747,124 +738,60 @@
             });
         });
 
-        // =============================================
         // Delete Requirement Modal Functions
-        // =============================================
+        let currentDeleteRequirementId = null;
 
-        /**
-         * Open Delete Requirement Modal
-         */
-        function openDeleteRequirementModal(requirementId, requirementName) {
-            document.getElementById('deleteRequirementId').value = requirementId;
+        function openDeleteRequirementModal(clearanceId, requirementId, requirementName) {
+            currentDeleteRequirementId = requirementId;
             document.getElementById('deleteRequirementName').innerText = requirementName;
+            document.getElementById('deleteRequirementId').value = requirementId;
             document.getElementById('deleteRequirementModal').classList.remove('hidden');
         }
 
-        /**
-         * Close Delete Requirement Modal
-         */
         function closeDeleteRequirementModal() {
             document.getElementById('deleteRequirementModal').classList.add('hidden');
-            document.getElementById('deleteRequirementForm').reset();
             document.getElementById('deleteRequirementNotification').classList.add('hidden');
         }
 
-        /**
-         * Handle Delete Requirement Form Submission
-         */
         document.getElementById('deleteRequirementForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            const requirementId = document.getElementById('deleteRequirementId').value;
-            
-            fetch(`/admin/clearance/${currentClearanceId}/requirements/delete/${requirementId}`, {
+            const deleteRequirementNotification = document.getElementById('deleteRequirementNotification');
+            deleteRequirementNotification.classList.add('hidden');
+
+            fetch(`/admin/clearance/${currentClearanceId}/requirements/delete/${currentDeleteRequirementId}`, {
                 method: 'DELETE',
                 headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                     'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
                 },
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Remove the requirement row from the table
-                    const tbody = document.getElementById('requirementsTableBody');
-                    const rows = tbody.getElementsByTagName('tr');
-                    for (let row of rows) {
-                        const cellId = row.cells[0].innerText;
-                        if (cellId == requirementId) {
-                            tbody.removeChild(row);
-                            break;
-                        }
-                    }
-
-                    // Update the number of requirements
-                    updateNumberOfRequirements();
-
-                    // Show success notification
-                    const notification = document.getElementById('deleteRequirementNotification');
-                    notification.innerText = data.message;
-                    notification.classList.remove('hidden');
-
-                    // Reset and close the modal after a short delay
-                    setTimeout(() => {
-                        closeDeleteRequirementModal();
-                    }, 1500);
+                    closeDeleteRequirementModal();
+                    fetchRequirements(currentClearanceId);
                 } else {
-                    alert(data.message || 'Failed to delete requirement.');
+                    deleteRequirementNotification.classList.remove('hidden');
+                    deleteRequirementNotification.innerText = data.message;
                 }
             })
             .catch(error => {
-                console.error('Error deleting requirement:', error);
+                console.error('Error:', error);
                 alert('An error occurred while deleting the requirement.');
             });
         });
-
-        // =============================================
-        // Utility Functions
-        // =============================================
-
-        /**
-         * Update the Number of Requirements in the Clearance Table
-         */
-        function updateNumberOfRequirements() {
-            fetch(`/admin/clearance/${currentClearanceId}/requirements`, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Update the number_of_requirements cell in the clearance table
-                    const clearanceRow = document.querySelector(`tr:nth-child(${getClearanceRowIndex(currentClearanceId)})`);
-                    if (clearanceRow) {
-                        clearanceRow.cells[5].innerText = data.requirements.length;
-                    }
-                }
-            })
-            .catch(error => {
-                console.error('Error updating number of requirements:', error);
-            });
+        
+    </script>
+    <script>
+        function openSendClearanceModal(clearanceId, clearanceName) {
+            document.getElementById('sendClearanceModal').classList.remove('hidden');
+            document.getElementById('modalClearanceName').innerText = clearanceName;
         }
 
-        /**
-         * Get the Row Index of a Clearance in the Table
-         */
-        function getClearanceRowIndex(clearanceId) {
-            const tbody = document.querySelector('tbody');
-            const rows = tbody.getElementsByTagName('tr');
-            for (let i = 0; i < rows.length; i++) {
-                const cellId = rows[i].cells[0].innerText;
-                if (cellId == clearanceId) {
-                    return i + 1; // nth-child is 1-based
-                }
-            }
-            return -1;
+        function closeSendClearanceModal() {
+            document.getElementById('sendClearanceModal').classList.add('hidden');
+            document.getElementById('modalClearanceName').innerText = '';
         }
-
     </script>
 </x-admin-layout>

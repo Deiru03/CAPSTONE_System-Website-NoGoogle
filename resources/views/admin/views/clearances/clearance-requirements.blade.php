@@ -32,15 +32,21 @@
                         <td class="px-4 py-3 whitespace-nowrap">{{ $requirement->id }}</td>
                         <td class="px-4 py-3 whitespace-nowrap">{{ $requirement->requirement }}</td>
                         <td class="py-2 px-3 border-b">
-                            <button onclick="openEditRequirementModal({{ $clearance->id }}, {{ $requirement->id }})" class="text-blue-500 flex items-center text-xs mr-2">
+                            <button 
+                                class="edit-button text-blue-500 flex items-center text-xs mr-2"
+                                data-clearance-id="{{ $clearance->id }}"
+                                data-requirement-id="{{ $requirement->id }}"
+                                data-requirement-text="{{ htmlspecialchars($requirement->requirement, ENT_QUOTES, 'UTF-8') }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
                                     <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                                 </svg>
                                 Edit
                             </button>
                             <button 
-                                onclick="openDeleteRequirementModal({{ $clearance->id }}, {{ $requirement->id }}, '{{ addslashes($requirement->requirement) }}')" 
-                                class="text-red-500 flex items-center text-xs">
+                                class="delete-button text-red-500 flex items-center text-xs"
+                                data-clearance-id="{{ $clearance->id }}"
+                                data-requirement-id="{{ $requirement->id }}"
+                                data-requirement-text="{{ htmlspecialchars($requirement->requirement, ENT_QUOTES, 'UTF-8') }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H3a1 1 0 000 2h1v10a2 2 0 002 2h8a2 2 0 002-2V6h1a1 1 0 100-2h-2V3a1 1 0 00-1-1H6zm3 4a1 1 0 112 0v8a1 1 0 11-2 0V6z" clip-rule="evenodd" />
                                 </svg>
@@ -123,7 +129,6 @@
         <div id="deleteRequirementNotification" class="hidden mt-2 text-red-600 bg-red-100 p-2 rounded">
             <!-- Notification message will appear here -->
         </div>
-        
         <!-- Loader for Delete Requirement Modal -->
         <div id="deleteRequirementLoader" class="hidden absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
             <div class="loader"></div>
@@ -236,24 +241,25 @@
     // Edit Requirement Modal Functions
     function openEditRequirementModal(clearanceId, requirementId) {
         // Fetch requirement data
-        fetch(`/admin/clearance/${clearanceId}/requirements/edit/${requirementId}`, {
+        fetch(`/admin/clearance/${currentClearanceId}/requirements/edit/${requirementId}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
             },
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+                document.getElementById('editRequirementId').value = data.requirement.id;
                 document.getElementById('editRequirementInput').value = data.requirement.requirement;
-                document.getElementById('editRequirementForm').action = `/admin/clearance/${clearanceId}/requirements/update/${requirementId}`;
                 document.getElementById('editRequirementModal').classList.remove('hidden');
             } else {
-                alert(data.message);
+                alert('Failed to fetch requirement data.');
             }
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error('Error fetching requirement data:', error);
             alert('An error occurred while fetching requirement data.');
         });
     }
@@ -265,50 +271,55 @@
     }
 
     document.getElementById('editRequirementForm').addEventListener('submit', function(event) {
-        event.preventDefault();
+        event.preventDefault(); // prevent default form submission
 
-        const editLoader = document.getElementById('editRequirementLoader');
-        const editNotification = document.getElementById('editRequirementNotification');
-        editLoader.classList.remove('hidden');
+        const requirementId = document.getElementById('editRequirementId').value;
+        const updatedRequirement = document.getElementById('editRequirementInput').value.trim();
 
-        const formData = {
-            requirement: document.getElementById('editRequirementInput').value,
-        };
+        if (updatedRequirement === '') {
+            alert('Requirement cannot be empty.');
+            return;
+        }
 
-        fetch(this.action, {
+        fetch(`/admin/clearance/${currentClearanceId}/requirements/update/${requirementId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
                 'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify({ requirement: updatedRequirement }),
         })
         .then(response => response.json())
         .then(data => {
-            editLoader.classList.add('hidden');
-
             if (data.success) {
-                editNotification.classList.remove('hidden');
-                editNotification.innerText = data.message;
+                // Find the table row and update the requirement text
+                const tbody = document.getElementById('requirementsTableBody');
+                const rows = tbody.getElementsByTagName('tr');
+                for (let row of rows) {
+                    const cellId = row.cells[0].innerText;
+                    if (cellId == requirementId) {
+                        row.cells[1].innerText = data.requirement.requirement;
+                        break;
+                    }
+                }
 
-                // Update the requirement in the table
-                const row = document.querySelector(`button[onclick="openEditRequirementModal(${data.requirement.clearance_id}, ${data.requirement.id})"]`).closest('tr');
-                row.children[1].innerText = data.requirement.requirement;
+                // Show success notification
+                const notification = document.getElementById('editRequirementNotification');
+                notification.innerText = data.message;
+                notification.classList.remove('hidden');
 
                 // Reset and close the modal after a short delay
                 setTimeout(() => {
                     closeEditRequirementModal();
-                }, 1000);
+                }, 1500);
             } else {
-                editNotification.classList.remove('hidden');
-                editNotification.classList.add('text-red-600');
-                editNotification.innerText = data.message;
+                alert(data.message || 'Failed to update requirement.');
             }
         })
         .catch(error => {
-            editLoader.classList.add('hidden');
-            console.error('Error:', error);
+            console.error('Error updating requirement:', error);
             alert('An error occurred while updating the requirement.');
         });
     });
