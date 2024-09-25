@@ -206,18 +206,20 @@
                 <button onclick="openAddRequirementModal()" class="mb-2 bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded">
                     Add Requirement
                 </button>
-                <table class="min-w-full text-sm border">
-                    <thead class="bg-gray-200">
-                        <tr>
-                            <th class="px-4 py-2 text-left">ID</th>
-                            <th class="px-4 py-2 text-left">Requirement</th>
-                            <th class="px-4 py-2 text-left">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="requirementsTableBody" class="divide-y divide-gray-200">
-                        {{-- Dynamically filled via JavaScript --}}
-                    </tbody>
-                </table>
+                <div class="overflow-y-auto max-h-[30rem]">
+                    <table class="min-w-full text-sm border">
+                        <thead class="bg-gray-200">
+                            <tr>
+                                <th class="px-4 py-2 text-left">ID</th>
+                                <th class="px-4 py-2 text-left">Requirement</th>
+                                <th class="px-4 py-2 text-left">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="requirementsTableBody" class="divide-y divide-gray-200">
+                            {{-- Dynamically filled via JavaScript --}}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="mt-4 flex justify-end">
