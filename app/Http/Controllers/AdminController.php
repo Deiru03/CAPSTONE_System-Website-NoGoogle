@@ -89,7 +89,7 @@ class AdminController extends Controller
         }
 
 
-        $faculty = $query->paginate(10);
+        $faculty = $query->paginate(30);
 
         return view ('admin.views.faculty', compact('faculty'));
     }

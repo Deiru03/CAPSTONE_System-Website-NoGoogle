@@ -57,44 +57,47 @@
             <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Apply</button>
         </form>
     
-        <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-            <thead class="bg-gray-200 text-gray-700">
-                <tr>
-                    <th class="py-2 px-3 text-left text-sm">ID</th>
-                    <th class="py-2 px-3 text-left text-sm">Name</th>
-                    <th class="py-2 px-3 text-left text-sm">Email</th>
-                    <th class="py-2 px-3 text-left text-sm">Program</th>
-                    <th class="py-2 px-3 text-center text-sm">Clearance Status</th>
-                    <th class="py-2 px-3 text-left text-sm">Checked By</th>
-                    <th class="py-2 px-3 text-left text-sm">Last Updated</th>
-                    <th class="py-2 px-3 text-left text-sm">Action</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-                @foreach ($clearance as $user)
-                <tr class="hover:bg-gray-50" data-id="{{ $user->id }}">
-                    <td class="py-2 px-3 text-sm">{{ $user->id }}</td>
-                    <td class="py-2 px-3 text-sm">{{ $user->name }}</td>
-                    <td class="py-2 px-3 text-sm">{{ $user->email }}</td>
-                    <td class="py-2 px-3 text-sm">{{ $user->program }}</td>
-                    <td class="py-2 px-3 clearances_status text-center text-sm">{{ $user->clearances_status }}</td>
-                    <td class="py-2 px-3 checked_by text-sm">{{ $user->checked_by }}</td>
-                    <td class="py-2 px-3 last_clearance_update text-sm">
-                        {{ $user->last_clearance_update ? \Carbon\Carbon::parse($user->last_clearance_update)->format('M d, Y H:i') : 'N/A' }}
-                    </td>
-                    <td class="py-2 px-3 text-sm">
-                        <button onclick="openModal({{ $user->id }})" class="text-blue-500 hover:text-blue-700 flex items-center">
-                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                            </svg>
-                            Edit
-                        </button>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+        <div class="overflow-x-auto">
+            <div class="max-h-[500px] overflow-y-auto">
+                <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+                    <thead class="bg-gray-200 text-gray-700 sticky top-0">
+                        <tr>
+                            <th class="py-2 px-3 text-left text-sm">ID</th>
+                            <th class="py-2 px-3 text-left text-sm">Name</th>
+                            <th class="py-2 px-3 text-left text-sm">Email</th>
+                            <th class="py-2 px-3 text-left text-sm">Program</th>
+                            <th class="py-2 px-3 text-center text-sm">Clearance Status</th>
+                            <th class="py-2 px-3 text-left text-sm">Checked By</th>
+                            <th class="py-2 px-3 text-left text-sm">Last Updated</th>
+                            <th class="py-2 px-3 text-left text-sm">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        @foreach ($clearance as $user)
+                        <tr class="hover:bg-gray-50" data-id="{{ $user->id }}">
+                            <td class="py-2 px-3 text-sm">{{ $user->id }}</td>
+                            <td class="py-2 px-3 text-sm">{{ $user->name }}</td>
+                            <td class="py-2 px-3 text-sm">{{ $user->email }}</td>
+                            <td class="py-2 px-3 text-sm">{{ $user->program }}</td>
+                            <td class="py-2 px-3 clearances_status text-center text-sm">{{ $user->clearances_status }}</td>
+                            <td class="py-2 px-3 checked_by text-sm">{{ $user->checked_by }}</td>
+                            <td class="py-2 px-3 last_clearance_update text-sm">
+                                {{ $user->last_clearance_update ? \Carbon\Carbon::parse($user->last_clearance_update)->format('M d, Y H:i') : 'N/A' }}
+                            </td>
+                            <td class="py-2 px-3 text-sm">
+                                <button onclick="openModal({{ $user->id }})" class="text-blue-500 hover:text-blue-700 flex items-center">
+                                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    </svg>
+                                    Edit
+                                </button>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
     <!-- Modal -->
     <div id="editModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
