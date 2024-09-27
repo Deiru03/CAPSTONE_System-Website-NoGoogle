@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Clearance;
 use App\Models\ClearanceRequirement;
-use App\Models\ClearanceDocument;
+use App\Models\SharedClearance;
+use Illuminate\Support\Facades\DB;
 
 class ClearanceController extends Controller
 {
@@ -80,6 +81,43 @@ class ClearanceController extends Controller
         ]);
     }
 
+    public function share(Request $request, $id)
+    {
+        $clearance = Clearance::findOrFail($id);
+
+        // Check if the clearance is already shared
+        $existingShare = SharedClearance::where('clearance_id', $clearance->id)->first();
+        if ($existingShare) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Clearance is already shared.',
+            ]);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            SharedClearance::create([
+                'clearance_id' => $clearance->id,
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Clearance shared successfully.',
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to share clearance.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     // Delete a clearance
     public function destroy($id)
     {
@@ -100,7 +138,6 @@ class ClearanceController extends Controller
     }
 
     ///////////////////////////////////////// Clearance Requirements ///////////////////////////////////////
-      ///////////////////////////////////////// Clearance Requirements ///////////////////////////////////////
     /**
      * Display the requirements for a specific clearance.
      */

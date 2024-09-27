@@ -4,31 +4,33 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Clearance;
+use App\Models\User;
 
-class ClearanceRequirement extends Model
+class SharedClearance extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'clearance_id',
-        'requirement',
     ];
 
+    /**
+     * Get the clearance associated with the shared clearance.
+     */
     public function clearance()
     {
         return $this->belongsTo(Clearance::class);
     }
 
-    protected static function booted()
+    /**
+     * Get the user associated with the shared clearance.
+     */
+    public function userClearances()
     {
-        static::created(function ($requirement) {
-            $requirement->clearance->increment('number_of_requirements');
-        });
-
-        static::deleted(function ($requirement) {
-            $requirement->clearance->decrement('number_of_requirements');
-        });
+        return $this->hasMany(UserClearance::class);
     }
+
     /**
      * Get the uploaded clearances associated with the shared clearance.
      */

@@ -77,12 +77,14 @@
                                     </svg>
                                     Manage Reqs
                                 </button>
-                                <button onclick="openSendClearanceModal({{ $clearance->id }}, '{{ addslashes($clearance->document_name) }}')" class="text-yellow-600 hover:text-yellow-800 flex items-center text-sm">
+                                <button 
+                                    onclick="openShareModal({{ $clearance->id }}, '{{ addslashes($clearance->document_name) }}')" 
+                                    class="text-green-600 hover:text-green-800 flex items-center text-sm">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                                        <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                                        <path fill-rule="evenodd" d="M5 5a2 2 0 012-2h6a2 2 0 012 2v2a1 1 0 01-1 1H6a1 1 0 01-1-1V5z" clip-rule="evenodd" />
+                                        <path d="M8 9H7v6H5V9H4l3-3 3 3z" />
+                                        <path d="M18 10v6a2 2 0 01-2 2H4a2 2 0 01-2-2v-6a2 2 0 012-2h1V7a2 2 0 012-2h4a2 2 0 012 2v1h1a2 2 0 012 2z" />
                                     </svg>
-                                    Send Clearance
+                                    Share Clearance
                                 </button>
                                 </div>
                                 </div>
@@ -281,6 +283,26 @@
                     </form>
                     <div id="deleteRequirementNotification" class="hidden mt-2 text-red-600"></div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Clearance Modal -->
+    <div id="shareModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
+        <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full relative">
+            <h3 class="text-2xl font-semibold mb-4 text-green-800">Share Clearance Checklist</h3>
+            <p>Are you sure you want to share the clearance checklist: <strong id="shareClearanceName"></strong>?</p>
+            <form id="shareForm" method="POST">
+                @csrf
+                <div class="flex justify-end space-x-4 mt-6">
+                    <button type="button" onclick="closeShareModal()" class="px-4 py-2 border border-gray-300 rounded-md">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md">Share</button>
+                </div>
+            </form>
+            <div id="shareNotification" class="hidden mt-2 text-green-600"></div>
+            <!-- Loader -->
+            <div id="shareLoader" class="hidden absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
+                <div class="loader"></div>
             </div>
         </div>
     </div>
@@ -795,5 +817,65 @@
             document.getElementById('sendClearanceModal').classList.add('hidden');
             document.getElementById('modalClearanceName').innerText = '';
         }
+    </script>
+    <!-- Share Clearance Modal -->
+    <script>
+        // Share Clearance Modal Functions
+        let currentShareClearanceId = null;
+
+        function openShareModal(id, name) {
+            currentShareClearanceId = id;
+            document.getElementById('shareClearanceName').innerText = name;
+            document.getElementById('shareForm').action = `{{ route('admin.clearance.share', '') }}/${id}`;
+            document.getElementById('shareModal').classList.remove('hidden');
+        }
+
+        function closeShareModal() {
+            document.getElementById('shareModal').classList.add('hidden');
+            document.getElementById('shareForm').reset();
+            document.getElementById('shareNotification').classList.add('hidden');
+        }
+
+        // Handle Share Form Submission
+        document.getElementById('shareForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const shareLoader = document.getElementById('shareLoader');
+            const shareNotification = document.getElementById('shareNotification');
+            shareLoader.classList.remove('hidden');
+            shareNotification.classList.add('hidden');
+
+            const actionUrl = this.action;
+
+            fetch(actionUrl, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                shareLoader.classList.add('hidden');
+
+                if (data.success) {
+                    shareNotification.classList.remove('hidden');
+                    shareNotification.innerText = data.message;
+                    // Optionally, reload the page to reflect changes
+                    setTimeout(() => {
+                        closeShareModal();
+                        location.reload();
+                    }, 1500);
+                } else {
+                    shareNotification.classList.remove('hidden');
+                    shareNotification.innerText = data.message;
+                }
+            })
+            .catch(error => {
+                shareLoader.classList.add('hidden');
+                console.error('Error sharing clearance:', error);
+                alert('An error occurred while sharing the clearance.');
+            });
+        });
     </script>
 </x-admin-layout>

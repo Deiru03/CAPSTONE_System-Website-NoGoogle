@@ -23,4 +23,9 @@ class Clearance extends Model
     {
         return $this->hasMany(ClearanceRequirement::class);
     }
+
+    public function sharedClearances()
+    {
+        return $this->hasMany(SharedClearance::class);
+    }
 }

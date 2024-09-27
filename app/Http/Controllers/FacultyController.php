@@ -7,6 +7,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Views\Faculty;
+use App\Models\Clearance;
 class FacultyController extends Controller
 {
 
@@ -38,8 +39,7 @@ class FacultyController extends Controller
     public function test(): View
     {
         return view('faculty.views.test-page');
-    }
+    }       
     
-}
-
 /////////////////////////////////////////////// End of Views Controller ////////////////////////////////////////////////  
+}

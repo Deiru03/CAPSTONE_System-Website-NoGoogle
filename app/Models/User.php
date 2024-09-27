@@ -54,4 +54,19 @@ class User extends Authenticatable
 
         ];
     }
+
+    public function sharedClearances()
+    {
+        return $this->hasMany(SharedClearance::class);
+    }
+
+    public function userClearances()
+    {
+        return $this->hasMany(UserClearance::class);
+    }
+
+    public function uploadedClearances()
+    {
+        return $this->hasMany(UploadedClearance::class);
+    }
 }

@@ -4,7 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FacultyController;
-use App\Http\Controllers\Admin\ClearanceController;
+use App\Http\Controllers\Admin\ClearanceController as AdminClearanceController;
+use App\Http\Controllers\Faculty\ClearanceController as FacultyClearanceController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use App\Models\User;
@@ -56,19 +57,21 @@ Route::middleware(['auth', 'verified', 'Admin'])->prefix('admin')->group(functio
     Route::post('/clearance/update', [AdminController::class, 'updateFacultyClearanceUser'])->name('admin.views.update-clearance'); // Update Clearance
 
     // Clearance Management
-    Route::get('/clearance', [ClearanceController::class, 'index'])->name('admin.clearance.manage');
-    Route::post('/clearance/store', [ClearanceController::class, 'store'])->name('admin.clearance.store');
-    Route::get('/clearance/edit/{id}', [ClearanceController::class, 'edit'])->name('admin.clearance.edit');
-    Route::post('/clearance/update/{id}', [ClearanceController::class, 'update'])->name('admin.clearance.update');
-    Route::delete('/clearance/delete/{id}', [ClearanceController::class, 'destroy'])->name('admin.clearance.destroy');
+    Route::get('/clearance', [AdminClearanceController::class, 'index'])->name('admin.clearance.manage');
+    Route::post('/clearance/store', [AdminClearanceController::class, 'store'])->name('admin.clearance.store');
+    Route::post('/clearance/share/{id}', [AdminClearanceController::class, 'share'])->name('admin.clearance.share');
+    Route::get('/clearance/edit/{id}', [AdminClearanceController::class, 'edit'])->name('admin.clearance.edit');
+    Route::post('/clearance/update/{id}', [AdminClearanceController::class, 'update'])->name('admin.clearance.update');
+    Route::delete('/clearance/delete/{id}', [AdminClearanceController::class, 'destroy'])->name('admin.clearance.destroy');
 
     Route::prefix('clearance/{clearanceId}/requirements')->group(function () {
-        Route::get('/', [ClearanceController::class, 'requirements'])->name('admin.clearance.requirements');
-        Route::post('/store', [ClearanceController::class, 'storeRequirement'])->name('admin.clearance.requirements.store');
-        Route::get('/edit/{requirementId}', [ClearanceController::class, 'editRequirement'])->name('admin.clearance.requirements.edit');
-        Route::post('/update/{requirementId}', [ClearanceController::class, 'updateRequirement'])->name('admin.clearance.requirements.update');
-        Route::delete('/delete/{requirementId}', [ClearanceController::class, 'destroyRequirement'])->name('admin.clearance.requirements.destroy');
+        Route::get('/', [AdminClearanceController::class, 'requirements'])->name('admin.clearance.requirements');
+        Route::post('/store', [AdminClearanceController::class, 'storeRequirement'])->name('admin.clearance.requirements.store');
+        Route::get('/edit/{requirementId}', [AdminClearanceController::class, 'editRequirement'])->name('admin.clearance.requirements.edit');
+        Route::post('/update/{requirementId}', [AdminClearanceController::class, 'updateRequirement'])->name('admin.clearance.requirements.update');
+        Route::delete('/delete/{requirementId}', [AdminClearanceController::class, 'destroyRequirement'])->name('admin.clearance.requirements.destroy');
     });
+    Route::post('/admin/clearance/share/{id}', [AdminClearanceController::class, 'share'])->name('admin.clearance.share');
 });
 
 
@@ -81,6 +84,15 @@ Route::middleware(['auth', 'verified', 'Faculty'])->prefix('faculty')->group(fun
     Route::get('/my-files', [FacultyController::class, 'myFiles'])->name('faculty.views.myFiles');
     Route::get('/archive', [FacultyController::class, 'archive'])->name('faculty.views.archive');
     Route::get('/test', [FacultyController::class, 'test'])->name('faculty.views.test');
+
+    // Clearance Controls & Routes
+    Route::get('/clearances/view-checklists', [FacultyClearanceController::class, 'index'])->name('faculty.clearances.index');
+    //Route::get('/clearances/show{id}', [FacultyClearanceController::class, 'show'])->name('faculty.clearances.show');
+    Route::get('/clearances/show/{id}', [FacultyClearanceController::class, 'show'])->name('faculty.clearances.show');
+    //Route::post('/clearances/{id}/upload/{requirementId}', [FacultyClearanceController::class, 'upload'])->name('faculty.clearances.upload');
+    Route::post('/clearances/share/{id}', [FacultyClearanceController::class, 'share'])->name('faculty.clearances.share'); // If needed
+    Route::post('/clearances/{id}/get-copy', [FacultyClearanceController::class, 'getCopy'])->name('faculty.clearances.getCopy');
+    Route::post('/clearances/{userClearanceId}/upload/{requirementId}', [FacultyClearanceController::class, 'upload'])->name('faculty.clearances.upload');
 }); 
 /////////////////////////////////////////////// End of Faculty Routes ////////////////////////////////////////////////
 

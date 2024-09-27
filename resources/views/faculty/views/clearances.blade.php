@@ -11,7 +11,10 @@
                 <div class="p-6 text-gray-900">
                     <h3 class="text-lg font-medium">Clearances</h3>
                     <p class="mt-2">Here you can view and manage clearances.</p>
-                    <!-- Add your Clearances management content here -->
+                    <!-- Navigation Button -->
+                    <a href="{{ route('faculty.clearances.index') }}" class="mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                        View Clearance Checklists
+                    </a>
                 </div>
             </div>            
         </div>
