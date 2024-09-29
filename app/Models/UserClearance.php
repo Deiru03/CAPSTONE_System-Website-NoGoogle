@@ -19,7 +19,7 @@ class UserClearance extends Model
      */
     public function sharedClearance()
     {
-        return $this->belongsTo(SharedClearance::class);
+        return $this->belongsTo(SharedClearance::class, 'shared_clearance_id');
     }
 
     /**
@@ -27,18 +27,24 @@ class UserClearance extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
-     /**
-     * Get the uploaded clearance for a specific requirement.
+    public function uploadedClearances()
+    {
+        return $this->hasMany(UploadedClearance::class, 'shared_clearance_id', 'shared_clearance_id');
+    }
+
+
+      /**
+     * Retrieve the UploadedClearance for a specific requirement.
      *
      * @param int $requirementId
-     * @return UploadedClearance|null
+     * @return \App\Models\UploadedClearance|null
      */
     public function uploadedClearanceFor($requirementId)
     {
-        return $this->hasMany(UploadedClearance::class, 'shared_clearance_id', 'shared_clearance_id')
+        return $this->uploadedClearances()
                     ->where('requirement_id', $requirementId)
                     ->where('user_id', $this->user_id)
                     ->first();

@@ -34,17 +34,19 @@
                     <td class="border px-4 py-2">{{ $requirement->id }}</td>
                     <td class="border px-4 py-2">{{ $requirement->requirement }}</td>
                     <td class="border px-4 py-2">
-                        @if(in_array($requirement->id, $uploadedClearances))
+                        @if($userClearance->uploadedClearanceFor($requirement->id))
                             <span class="text-green-600">Completed</span>
                         @else
                             <span class="text-red-600">Pending</span>
                         @endif
                     </td>
                     <td class="border px-4 py-2">
-                        @if(in_array($requirement->id, $uploadedClearances))
-                            <a href="{{ Storage::url($userClearance->uploadedClearanceFor($requirement->id)->file_path) }}" class="text-blue-500">View File</a>
+                        @if($userClearance->uploadedClearanceFor($requirement->id))
+                            <a href="{{ Storage::url($userClearance->uploadedClearanceFor($requirement->id)->file_path) }}" class="text-blue-500" target="_blank">
+                                View File
+                            </a>
                         @else
-                            <button onclick="openUploadModal({{ $userClearance->id }}, {{ $requirement->id }})" class="bg-blue-500 text-white px-3 py-1 rounded">
+                            <button onclick="openUploadModal({{ $userClearance->shared_clearance_id }}, {{ $requirement->id }})" class="bg-blue-500 text-white px-3 py-1 rounded">
                                 Upload
                             </button>
                         @endif
@@ -61,32 +63,28 @@
             <h3 class="text-2xl font-semibold mb-4">Upload File for Requirement ID: <span id="uploadRequirementId"></span></h3>
             <form id="uploadForm" class="space-y-4">
                 @csrf
-                <input type="hidden" id="uploadSharedClearanceId" name="sharedClearanceId">
-                <input type="hidden" id="uploadRequirementId" name="requirementId">
+                <input type="hidden" id="uploadUserClearanceId" name="userClearanceId">
+                <input type="hidden" id="uploadRequirementIdInput" name="requirementId">
                 <div>
                     <label for="uploadFile" class="block text-sm font-medium text-gray-700">Select File</label>
-                    <input type="file" id="uploadFile" name="file" class="mt-1 block w-full border-gray-300 rounded-md">
+                    <input type="file" id="uploadFile" name="file" class="mt-1 block w-full">
                 </div>
-                <div class="flex justify-end space-x-4">
-                    <button type="button" onclick="closeUploadModal()" class="px-4 py-2 border border-gray-300 rounded-md">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md">Upload</button>
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Upload</button>
+                    <button type="button" onclick="closeUploadModal()" class="text-gray-500">Cancel</button>
                 </div>
-                <div id="uploadNotification" class="hidden mt-2 text-green-600"></div>
-                <!-- Loader -->
-                <div id="uploadLoader" class="hidden absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
-                    <div class="loader"></div>
-                </div>
+                <div id="uploadNotification" class="hidden bg-green-100 text-green-700 p-2 rounded mt-4"></div>
+                <div id="uploadLoader" class="hidden">Uploading...</div>
             </form>
         </div>
     </div>
 
     <script>
-        // Function to open the upload modal
         function openUploadModal(userClearanceId, requirementId) {
             document.getElementById('uploadModal').classList.remove('hidden');
-            document.getElementById('uploadSharedClearanceId').value = userClearanceId;
+            document.getElementById('uploadUserClearanceId').value = userClearanceId;
             document.getElementById('uploadRequirementId').innerText = requirementId;
-            document.getElementById('uploadRequirementId').value = requirementId;
+            document.getElementById('uploadRequirementIdInput').value = requirementId;
         }
 
         // Function to close the upload modal
@@ -100,8 +98,8 @@
         document.getElementById('uploadForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            const sharedClearanceId = document.getElementById('uploadSharedClearanceId').value;
-            const requirementId = document.getElementById('uploadRequirementId').value;
+            const userClearanceId = document.getElementById('uploadUserClearanceId').value;
+            const requirementId = document.getElementById('uploadRequirementIdInput').value;
             const fileInput = document.getElementById('uploadFile');
             const uploadNotification = document.getElementById('uploadNotification');
             const uploadLoader = document.getElementById('uploadLoader');
@@ -117,7 +115,7 @@
             uploadLoader.classList.remove('hidden');
             uploadNotification.classList.add('hidden');
 
-            fetch(`/faculty/clearances/${sharedClearanceId}/upload/${requirementId}`, {
+            fetch(`/faculty/clearances/${userClearanceId}/upload/${requirementId}`, {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -136,7 +134,12 @@
                         location.reload();
                     }, 1500);
                 } else {
-                    alert(data.message || 'Failed to upload file.');
+                    if (data.errors) {
+                        // Display validation errors
+                        alert(JSON.stringify(data.errors));
+                    } else {
+                        alert(data.message || 'Failed to upload file.');
+                    }
                 }
             })
             .catch(error => {

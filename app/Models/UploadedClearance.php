@@ -22,7 +22,7 @@ class UploadedClearance extends Model
      */
     public function sharedClearance()
     {
-        return $this->belongsTo(SharedClearance::class);
+        return $this->belongsTo(SharedClearance::class, 'shared_clearance_id');
     }
 
     /**
@@ -30,7 +30,7 @@ class UploadedClearance extends Model
      */
     public function requirement()
     {
-        return $this->belongsTo(ClearanceRequirement::class);
+        return $this->belongsTo(ClearanceRequirement::class, 'requirement_id');
     }
 
     /**
@@ -38,6 +38,6 @@ class UploadedClearance extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

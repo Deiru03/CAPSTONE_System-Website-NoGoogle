@@ -9,6 +9,8 @@ use App\Models\UploadedClearance;
 use App\Models\UserClearance;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class ClearanceController extends Controller
 {/**
@@ -77,42 +79,62 @@ class ClearanceController extends Controller
         return view('faculty.views.clearances.clearance-show', compact('userClearance', 'uploadedClearances'));
     }
 
+   
     /**
-     * Handle the upload of a requirement.
+     * Handle the file upload for a specific requirement.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $userClearanceId
+     * @param  int  $requirementId
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function upload(Request $request, $id, $requirementId, $userClearanceId)
+    public function upload(Request $request, $userClearanceId, $requirementId)
     {
         $user = Auth::user();
-        $userClearanceId = $request->input('userClearanceId');
 
-        $userClearance = UserClearance::where('id', $userClearanceId)
-            ->where('user_id', $user->id)
-            ->firstOrFail();
-
-        $request->validate([
+        // Validate the request
+        $validator = Validator::make($request->all(), [
             'file' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:2048', // Adjust as needed
         ]);
 
-        // Handle file upload
-        if ($request->hasFile('file')) {
-            $path = $request->file('file')->store('uploads/faculty_clearances', 'public');
-
-            // Create or update the uploaded clearance
-            UploadedClearance::updateOrCreate(
-                [
-                    'shared_clearance_id' => $userClearance->shared_clearance_id,
-                    'requirement_id' => $requirementId,
-                    'user_id' => $user->id,
-                ],
-                [
-                    'file_path' => $path,
-                ]
-            );
-
+        if ($validator->fails()) {
             return response()->json([
-                'success' => true,
-                'message' => 'File uploaded successfully.',
-            ]);
+                'success' => false,
+                'message' => 'Validation failed.',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        // Handle the file upload
+        if ($request->hasFile('file')) {
+            try {
+                $path = $request->file('file')->store('uploads/faculty_clearances', 'public');
+
+                // Create or update the uploaded clearance
+                UploadedClearance::updateOrCreate(
+                    [
+                        'shared_clearance_id' => $userClearanceId,
+                        'requirement_id' => $requirementId,
+                        'user_id' => $user->id,
+                    ],
+                    [
+                        'file_path' => $path,
+                    ]
+                );
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'File uploaded successfully.',
+                ]);
+            } catch (\Exception $e) {
+                // Log the error for debugging
+                Log::error('File Upload Error: '.$e->getMessage());
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to upload file.',
+                ], 500);
+            }
         }
 
         return response()->json([
