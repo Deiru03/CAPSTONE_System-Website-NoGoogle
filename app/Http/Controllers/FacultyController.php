@@ -32,10 +32,6 @@ class FacultyController extends Controller
     {
         return view('faculty.views.submitted-reports');
     }   
-    public function archive(): View
-    {
-        return view('faculty.views.archive');
-    }
     public function test(): View
     {
         return view('faculty.views.test-page');

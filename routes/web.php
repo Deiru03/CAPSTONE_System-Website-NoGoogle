@@ -47,7 +47,6 @@ Route::middleware(['auth', 'verified', 'Admin'])->prefix('admin')->group(functio
     Route::get('/submitted-reports', [AdminController::class, 'submittedReports'])->name('admin.views.submittedReports');
     Route::get('/faculty', [AdminController::class, 'faculty'])->name('admin.views.faculty');
     Route::get('/my-files', [AdminController::class, 'myFiles'])->name('admin.views.myFiles');
-    Route::get('/archive', [AdminController::class, 'archive'])->name('admin.views.archive');
     Route::get('/profile', [AdminController::class, 'profileEdit'])->name('admin.profile.edit');
 
     //////////////////////// Edit Faculty //////////////////////
@@ -82,7 +81,6 @@ Route::middleware(['auth', 'verified', 'Faculty'])->prefix('faculty')->group(fun
     Route::get('/clearances', [FacultyController::class, 'clearances'])->name('faculty.views.clearances');
     Route::get('/submitted-reports', [FacultyController::class, 'submittedReports'])->name('faculty.views.submittedReports');
     Route::get('/my-files', [FacultyController::class, 'myFiles'])->name('faculty.views.myFiles');
-    Route::get('/archive', [FacultyController::class, 'archive'])->name('faculty.views.archive');
     Route::get('/test', [FacultyController::class, 'test'])->name('faculty.views.test');
 
     // Clearance Controls & Routes
