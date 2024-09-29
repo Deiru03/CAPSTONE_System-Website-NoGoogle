@@ -35,7 +35,7 @@
                     <td class="border px-4 py-2">{{ $requirement->requirement }}</td>
                     <td class="border px-4 py-2">
                         @if($userClearance->uploadedClearanceFor($requirement->id))
-                            <span class="text-green-600">Completed</span>
+                            <span class="text-green-600">Uploaded</span>
                         @else
                             <span class="text-red-600">Pending</span>
                         @endif
