@@ -142,4 +142,37 @@ class ClearanceController extends Controller
             'message' => 'No file uploaded.',
         ], 400);
     }
+
+    public function deleteFile($sharedClearanceId, $requirementId)
+    {
+        $user = Auth::user();
+
+        try {
+            // Retrieve the UploadedClearance record
+            $uploadedClearance = UploadedClearance::where('shared_clearance_id', $sharedClearanceId)
+                ->where('requirement_id', $requirementId)
+                ->where('user_id', $user->id)
+                ->firstOrFail();
+
+            // Delete the file from storage
+            if (Storage::disk('public')->exists($uploadedClearance->file_path)) {
+                Storage::disk('public')->delete($uploadedClearance->file_path);
+            }
+
+            // Delete the record from the database
+            $uploadedClearance->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'File deleted successfully.',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('File Deletion Error: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete the file.',
+            ], 500);
+        }
+    }
 }

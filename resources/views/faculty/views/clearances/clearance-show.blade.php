@@ -42,11 +42,23 @@
                     </td>
                     <td class="border px-4 py-2">
                         @if($userClearance->uploadedClearanceFor($requirement->id))
-                            <a href="{{ Storage::url($userClearance->uploadedClearanceFor($requirement->id)->file_path) }}" class="text-blue-500" target="_blank">
-                                View File
+                            <a href="{{ Storage::url($userClearance->uploadedClearanceFor($requirement->id)->file_path) }}" 
+                               class="bg-green-500 text-white px-3 py-1 rounded inline-block text-center" 
+                               style="width: 75px;" 
+                               target="_blank">
+                                View
                             </a>
+                            <!-- Delete Button -->
+                            <button 
+                                onclick="deleteFile({{ $userClearance->shared_clearance_id }}, {{ $requirement->id }})" 
+                                class="ml-2 bg-red-500 text-white px-3 py-1 rounded" 
+                                style="width: 75px;">
+                                Delete
+                            </button>
                         @else
-                            <button onclick="openUploadModal({{ $userClearance->shared_clearance_id }}, {{ $requirement->id }})" class="bg-blue-500 text-white px-3 py-1 rounded">
+                            <button 
+                                onclick="openUploadModal({{ $userClearance->shared_clearance_id }}, {{ $requirement->id }})" 
+                                class="bg-blue-500 text-white px-3 py-1 rounded">
                                 Upload
                             </button>
                         @endif
@@ -148,5 +160,39 @@
                 alert('An error occurred while uploading the file.');
             });
         });
+         /**
+     * Function to handle file deletion.
+     *
+     * @param {number} sharedClearanceId
+     * @param {number} requirementId
+     */
+        function deleteFile(sharedClearanceId, requirementId) {
+            if (!confirm('Are you sure you want to delete this file?')) {
+                return;
+            }
+
+            fetch(`/faculty/clearances/${sharedClearanceId}/upload/${requirementId}/delete`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    // Reload the page to reflect changes
+                    location.reload();
+                } else {
+                    alert(data.message || 'Failed to delete the file.');
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting file:', error);
+                alert('An error occurred while deleting the file.');
+            });
+        }
     </script>
 </x-app-layout>
