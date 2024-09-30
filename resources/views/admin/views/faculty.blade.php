@@ -115,7 +115,7 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
                                             <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H3a1 1 0 000 2h1v10a2 2 0 002 2h8a2 2 0 002-2V6h1a1 1 0 100-2h-2V3a1 1 0 00-1-1H6zm3 4a1 1 0 112 0v8a1 1 0 11-2 0V6z" clip-rule="evenodd" />
                                         </svg>
-                                        Delete
+                                        Dispose
                                     </button>
                                 </td>
                             </tr>
@@ -153,7 +153,7 @@
                         </div>
                         <div>
                             <label for="editUnits" class="block text-sm font-medium text-gray-700">Units</label>
-                            <input type="number" name="units" id="editUnits" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm transition duration-300 ease-in-out transform hover:scale-105 focus:border-blue-500 focus:ring focus:ring-blue-200" required>
+                            <input type="number" name="units" id="editUnits" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm transition duration-300 ease-in-out transform hover:scale-105 focus:border-blue-500 focus:ring focus:ring-blue-200">
                         </div>
                         <div>
                             <label for="editPosition" class="block text-sm font-medium text-gray-700">Status/Position</label>

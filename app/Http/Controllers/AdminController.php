@@ -26,7 +26,7 @@ class AdminController extends Controller
         //////////////////////// Faculty Counts //////////////////////////
         $facultyPermanent = User::where('position', 'Permanent')->count();
         $facultyTemporary = User::where('position', 'Temporary')->count();
-        $facultyPartTime = User::where('position', 'Part-Time')->count();
+        $facultyPartTime = User::where('position', 'Part-Timer')->count();
 
         if (Auth::check() && Auth::user()->user_type === 'Faculty') {
             return view('dashboard');
