@@ -13,6 +13,7 @@ class SharedClearance extends Model
 
     protected $fillable = [
         'clearance_id',
+        'user_id',
     ];
 
     /**
@@ -20,7 +21,7 @@ class SharedClearance extends Model
      */
     public function clearance()
     {
-        return $this->belongsTo(Clearance::class);
+        return $this->belongsTo(Clearance::class, 'clearance_id');
     }
 
     /**
@@ -31,11 +32,16 @@ class SharedClearance extends Model
         return $this->hasMany(UserClearance::class);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     /**
      * Get the uploaded clearances associated with the shared clearance.
      */
     public function uploadedClearances()
     {
-        return $this->hasMany(UploadedClearance::class);
+        return $this->hasMany(UploadedClearance::class, 'shared_clearance_id');
     }
 }

@@ -16,7 +16,7 @@ class ClearanceRequirement extends Model
 
     public function clearance()
     {
-        return $this->belongsTo(Clearance::class);
+        return $this->belongsTo(Clearance::class, 'clearance_id');
     }
 
     protected static function booted()
@@ -34,6 +34,6 @@ class ClearanceRequirement extends Model
      */
     public function uploadedClearances()
     {
-        return $this->hasMany(UploadedClearance::class);
+        return $this->hasMany(UploadedClearance::class, 'requirement_id');
     }
 }

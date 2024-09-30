@@ -18,12 +18,26 @@ class CreateUploadedClearancesTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('file_path');
             $table->timestamps();
-
-            $table->foreign('shared_clearance_id')->references('id')->on('shared_clearances')->onDelete('cascade');
-            $table->foreign('requirement_id')->references('id')->on('clearance_requirements')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             
-            $table->unique(['shared_clearance_id', 'requirement_id', 'user_id'], 'unique_upload');
+
+            $table->foreign('shared_clearance_id')
+                ->references('id')
+                ->on('shared_clearances')
+                ->onDelete('cascade');
+            
+            $table->foreign('requirement_id')
+                ->references('id')
+                ->on('clearance_requirements')
+                ->onDelete('cascade');
+            
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
+        
+        // Removed the unique constraint to allow multiple uploads per requirement
+        // $table->unique(['shared_clearance_id', 'requirement_id', 'user_id'], 'unique_upload');
+    
         });
     }
 

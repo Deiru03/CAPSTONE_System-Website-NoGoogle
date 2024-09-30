@@ -84,17 +84,17 @@ class ClearanceController extends Controller
      * Handle the file upload for a specific requirement.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $userClearanceId
+     * @param  int  $sharedClearanceId
      * @param  int  $requirementId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function upload(Request $request, $userClearanceId, $requirementId)
+    public function upload(Request $request, $sharedClearanceId, $requirementId)
     {
         $user = Auth::user();
 
         // Validate the request
         $validator = Validator::make($request->all(), [
-            'file' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:2048', // Adjust as needed
+            'files.*' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:2048', // Allow multiple files
         ]);
 
         if ($validator->fails()) {
@@ -105,26 +105,24 @@ class ClearanceController extends Controller
             ], 422);
         }
 
-        // Handle the file upload
-        if ($request->hasFile('file')) {
+        // Handle the file uploads
+        if ($request->hasFile('files')) {
             try {
-                $path = $request->file('file')->store('uploads/faculty_clearances', 'public');
+                foreach ($request->file('files') as $file) {
+                    $path = $file->store('uploads/faculty_clearances', 'public');
 
-                // Create or update the uploaded clearance
-                UploadedClearance::updateOrCreate(
-                    [
-                        'shared_clearance_id' => $userClearanceId,
+                    // Create a new UploadedClearance record for each file
+                    UploadedClearance::create([
+                        'shared_clearance_id' => $sharedClearanceId,
                         'requirement_id' => $requirementId,
                         'user_id' => $user->id,
-                    ],
-                    [
                         'file_path' => $path,
-                    ]
-                );
+                    ]);
+                }
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'File uploaded successfully.',
+                    'message' => 'Files uploaded successfully.',
                 ]);
             } catch (\Exception $e) {
                 // Log the error for debugging
@@ -132,14 +130,14 @@ class ClearanceController extends Controller
 
                 return response()->json([
                     'success' => false,
-                    'message' => 'Failed to upload file.',
+                    'message' => 'Failed to upload files.',
                 ], 500);
             }
         }
 
         return response()->json([
             'success' => false,
-            'message' => 'No file uploaded.',
+            'message' => 'No files uploaded.',
         ], 400);
     }
 
@@ -168,6 +166,90 @@ class ClearanceController extends Controller
             ]);
         } catch (\Exception $e) {
             Log::error('File Deletion Error: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete the file.',
+            ], 500);
+        }
+    }
+
+
+    // Single File View Get or Fetch
+        /**
+     * Retrieve all uploaded files for a specific requirement.
+     *
+     * @param  int  $sharedClearanceId
+     * @param  int  $requirementId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getUploadedFiles($sharedClearanceId, $requirementId)
+    {
+        $user = Auth::user();
+
+        try {
+            $uploadedFiles = UploadedClearance::where('shared_clearance_id', $sharedClearanceId)
+                ->where('requirement_id', $requirementId)
+                ->where('user_id', $user->id)
+                ->get();
+
+            $files = $uploadedFiles->map(function($file) {
+                return [
+                    'id' => $file->id,
+                    'name' => basename($file->file_path),
+                    'url' => Storage::url($file->file_path),
+                ];
+            });
+
+            return response()->json([
+                'success' => true,
+                'files' => $files,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Fetching Uploaded Files Error: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch uploaded files.',
+            ], 500);
+        }
+    }
+
+        // Single File Delete
+        /**
+     * Delete a specific uploaded clearance file.
+     *
+     * @param  int  $sharedClearanceId
+     * @param  int  $requirementId
+     * @param  int  $fileId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteSingleFile($sharedClearanceId, $requirementId, $fileId)
+    {
+        $user = Auth::user();
+
+        try {
+            // Retrieve the specific UploadedClearance record
+            $uploadedClearance = UploadedClearance::where('id', $fileId)
+                ->where('shared_clearance_id', $sharedClearanceId)
+                ->where('requirement_id', $requirementId)
+                ->where('user_id', $user->id)
+                ->firstOrFail();
+
+            // Delete the file from storage
+            if (Storage::disk('public')->exists($uploadedClearance->file_path)) {
+                Storage::disk('public')->delete($uploadedClearance->file_path);
+            }
+
+            // Delete the record from the database
+            $uploadedClearance->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'File deleted successfully.',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Deleting Single File Error: '.$e->getMessage());
 
             return response()->json([
                 'success' => false,
