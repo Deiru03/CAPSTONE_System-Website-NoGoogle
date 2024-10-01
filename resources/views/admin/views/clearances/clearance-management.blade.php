@@ -8,7 +8,7 @@
 
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 shadow-lg border border-gray-300">
         <div class="p-6 text-gray-900">
-            <h2 class="text-3xl font-extrabold mb-6 text-indigo-600 animate-pulse">Manage Clearance Checklists</h2>
+            <h2 class="text-3xl font-extrabold mb-6 text-indigo-600 ">Manage Clearance Checklists</h2>
             <p class="text-lg mb-4">Here you can create and manage clearance checklists.</p>
             <!-- Add Button -->
             <button onclick="openAddModal()" class="mt-4 bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition duration-300 hover:scale-105">
@@ -69,7 +69,7 @@
                                     </div>
                                     <button 
                                     onclick="openEditRequirementsModal({{ $clearance->id }}, '{{ addslashes($clearance->document_name) }}')" 
-                                    class="text-purple-800 flex items-center text-sm">
+                                    class="text-purple-600 flex hover:text-purple-800 items-center text-sm">
                                     {{-- Edit Requirements Icon --}}
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
                                         <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
