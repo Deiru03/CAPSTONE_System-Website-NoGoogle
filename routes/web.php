@@ -85,13 +85,13 @@ Route::middleware(['auth', 'verified', 'Faculty'])->prefix('faculty')->group(fun
 
     // Clearance Controls & Routes
     Route::get('/clearances/view-checklists', [FacultyClearanceController::class, 'index'])->name('faculty.clearances.index');
-    //Route::get('/clearances/show{id}', [FacultyClearanceController::class, 'show'])->name('faculty.clearances.show');
+    
     Route::get('/clearances/show/{id}', [FacultyClearanceController::class, 'show'])->name('faculty.clearances.show');
-    //Route::post('/clearances/{id}/upload/{requirementId}', [FacultyClearanceController::class, 'upload'])->name('faculty.clearances.upload');
+    
     Route::post('/clearances/share/{id}', [FacultyClearanceController::class, 'share'])->name('faculty.clearances.share'); // If needed
     Route::post('/clearances/{id}/get-copy', [FacultyClearanceController::class, 'getCopy'])->name('faculty.clearances.getCopy');
     Route::post('/clearances/{userClearanceId}/upload/{requirementId}', [FacultyClearanceController::class, 'upload'])->name('faculty.clearances.upload');
-    //Route::delete('/clearances/{userClearanceId}/delete/{requirementId}', [FacultyClearanceController::class, 'deleteFile'])->name('faculty.clearances.delete');
+    
     Route::delete('/clearances/{sharedClearanceId}/upload/{requirementId}/delete', [FacultyClearanceController::class, 'deleteFile'])->name('faculty.clearances.delete');
     //clearance view files singles
     Route::get('/clearances/{sharedClearanceId}/requirement/{requirementId}/files', [FacultyClearanceController::class, 'getUploadedFiles'])->name('faculty.clearances.getFiles');

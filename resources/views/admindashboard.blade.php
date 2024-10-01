@@ -3,7 +3,14 @@
         {{ __('Dashboard') }} <!-- Set the header content here -->
     </x-slot>
 
+    <!-- Existing Content -->
+    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mt-8">
+        <div class="p-6 text-gray-900">
+            {{ __("You're logged in!") }}
+        </div>
+    </div>
     <div class="py-12">
+        
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Faculty Card -->
@@ -48,6 +55,44 @@
                 </a>
             </div>
 
+            <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Example Card 1 -->
+                <a href="" class="bg-green-500 text-white p-4 rounded-lg shadow relative hover:bg-green-600 transition duration-300 ease-in-out cursor-pointer transform hover:scale-105 hover:shadow-lg">
+                    <div>
+                        <h3 class="text-lg font-bold">Profile</h3>
+                        <p class="text-2xl"></p>
+                        
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 absolute top-2 right-2 opacity-50 transition-transform duration-300 ease-in-out transform hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <!-- SVG Path -->
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                </a>
+
+                <!-- Example Card 2 -->
+                <a href="{{ route('admin.clearance.manage') }}" class="bg-blue-500 text-white p-4 rounded-lg shadow relative hover:bg-blue-600 transition duration-300 ease-in-out cursor-pointer transform hover:scale-105 hover:shadow-lg">
+                    <div>
+                        <h3 class="text-lg font-bold">Manage Clearance</h3>
+                        <p class="text-2xl"></p>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 absolute top-2 right-2 opacity-50 transition-transform duration-300 ease-in-out transform hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                </a>
+
+                <a href="" class="bg-purple-500 text-white p-4 rounded-lg shadow relative hover:bg-purple-600 transition duration-300 ease-in-out cursor-pointer transform hover:scale-105 hover:shadow-lg">
+                    <div>
+                        <h3 class="text-lg font-bold">Share Clearances</h3>
+                        <p class="text-2xl"></p>
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 absolute top-2 right-2 opacity-50 transition-transform duration-300 ease-in-out transform hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                    </svg>
+                </a>
+
+                <!-- Add more cards as needed -->
+            </div>
+
             <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Clearance Status -->
                 <div class="bg-white p-4 rounded-lg shadow">
@@ -76,7 +121,7 @@
                     </table>
                 </div>
 
-                <!-- Faculty Status -->
+                <!-- Clearance Overview -->
                 <div class="bg-white p-4 rounded-lg shadow">
                     <h3 class="text-lg font-bold">Faculty Status</h3>
                     <table class="min-w-full mt-4">
@@ -103,6 +148,64 @@
                     </table>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <!-- Add New Content Here -->
+            
+
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Example Status Table 1 -->
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h3 class="text-lg font-bold">Profile Status</h3>
+                    <table class="min-w-full mt-4">
+                        <thead>
+                            <tr>
+                                <th class="text-left">Status</th>
+                                <th class="text-left">Count</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-blue-500">Active</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td class="text-red-500">Inactive</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Example Status Table 2 -->
+                <div class="bg-white p-4 rounded-lg shadow">
+                    <h3 class="text-lg font-bold">Messages Status</h3>
+                    <table class="min-w-full mt-4">
+                        <thead>
+                            <tr>
+                                <th class="text-left">Type</th>
+                                <th class="text-left">Count</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-green-500">Read</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td class="text-yellow-500">Unread</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- End of New Content -->
+
+            
+            <!-- End of Existing Content -->
         </div>
     </div>
 </x-admin-layout>

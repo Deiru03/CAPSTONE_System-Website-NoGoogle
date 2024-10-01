@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
-use App\Views\Admin;
 /////////////////////////////////////////////// Admin ViewsController ////////////////////////////////////////////////
 class AdminController extends Controller
 {
@@ -34,7 +33,7 @@ class AdminController extends Controller
         //////////////////////// Dashboard Throw Variables //////////////////////////
         return view('admindashboard', compact('TotalUser', 'clearancePending',
          'clearanceComplete', 'clearanceReturn', 'clearanceTotal',
-         'facultyPermanent', 'facultyTemporary', 'facultyPartTime'));
+         'facultyPermanent', 'facultyTemporary', 'facultyPartTime' ));
     }
 
     public function clearances(Request $request): View
