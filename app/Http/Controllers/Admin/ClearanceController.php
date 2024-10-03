@@ -267,4 +267,41 @@ class ClearanceController extends Controller
             'message' => 'Requirement deleted successfully.',
         ]);
     }
+
+    /////////////////////////////////// Shared Fetch Methods ////////////////////////////////////////////////
+    public function shared()
+    {
+        $sharedClearances = SharedClearance::with('clearance')->get()->map(function ($shared) {
+            return [
+                'id' => $shared->id,
+                'document_name' => $shared->clearance->document_name,
+                'units' => $shared->clearance->units,
+                'type' => $shared->clearance->type,
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'sharedClearances' => $sharedClearances,
+        ]);
+    }
+
+    public function removeShared($id)
+    {
+        $sharedClearance = SharedClearance::find($id);
+
+        if (!$sharedClearance) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Shared clearance not found.',
+            ], 404);
+        }
+
+        $sharedClearance->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Shared clearance removed successfully.',
+        ]);
+    }
 }

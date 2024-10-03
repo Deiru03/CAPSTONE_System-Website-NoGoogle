@@ -154,7 +154,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Add New Content Here -->
             
-
+            {{-- 
             <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Example Status Table 1 -->
                 <div class="bg-white p-4 rounded-lg shadow">
@@ -201,7 +201,7 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </div>  --}}
             <!-- End of New Content -->
 
             

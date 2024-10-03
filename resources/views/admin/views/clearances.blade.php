@@ -99,7 +99,7 @@
             </div>
         </div>
 
-    <!-- Modal -->
+    <!-- Edit Modal -->
     <div id="editModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
         <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
             <h3 class="text-2xl font-bold mb-6 text-gray-800 flex items-center">
@@ -149,9 +149,7 @@
                         </svg>
                         Last Updated
                     </label>
-                    {{-- Temporary hidden field to store the last_clearance_update value 
-                    <input type="text" name="last_clearance_update" id="editLastUpdate" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" value="{{ now()->format('M d, Y H:i:s') }}" readonly>
-                    --}}
+                    <textarea name="last_clearance_update" id="editLastUpdate" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" readonly>{{ now()->format('M d, Y H:i:s') }}</textarea>
                 </div>
                 <div class="flex justify-end space-x-3">
                     <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 flex items-center">

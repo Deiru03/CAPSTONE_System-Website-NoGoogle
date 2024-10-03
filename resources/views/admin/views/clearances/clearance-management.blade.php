@@ -19,6 +19,15 @@
                     Add Clearance Checklist
                 </span>
             </button>
+            <!-- Add this button below the "Add Clearance Checklist" button -->
+            <button onclick="openSharedClearancesModal()" class="mt-4 bg-gradient-to-r from-purple-400 to-purple-600 hover:from-purple-500 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition duration-300 hover:scale-105">
+                <span class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" clip-rule="evenodd" />
+                    </svg>
+                    View Shared Clearances
+                </span>
+            </button>
         </div>
 
         <!-- Clearance Table -->
@@ -98,32 +107,33 @@
     </div>
 
     <!-- Add Modal -->
-    <div id="addModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
-        <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full relative">
-            <h3 class="text-2xl font-semibold mb-4 text-gray-800 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div id="addModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-70 hidden z-50 transition-opacity duration-300">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full relative overflow-hidden duration-300 scale-95 hover:scale-100">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-400 to-blue-500"></div>
+            <h3 class="text-3xl font-bold mb-6 text-gray-800 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
                 Add Clearance Checklist
             </h3>
-            <form id="addForm" method="POST" action="{{ route('admin.clearance.store') }}">
+            <form id="addForm" method="POST" action="{{ route('admin.clearance.store') }}" class="space-y-6">
                 @csrf
                 <div class="space-y-4">
-                    <div>
-                        <label for="addDocumentName" class="block text-sm font-medium text-gray-700">Document Name</label>
-                        <input type="text" name="document_name" id="addDocumentName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                    <div class="relative">
+                        <label for="addDocumentName" class="block text-sm font-medium text-gray-700 mb-1">Document Name</label>
+                        <input type="text" name="document_name" id="addDocumentName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-150 ease-in-out" required>
                     </div>
-                    <div>
-                        <label for="addDescription" class="block text-sm font-medium text-gray-700">Description</label>
-                        <textarea name="description" id="addDescription" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></textarea>
+                    <div class="relative">
+                        <label for="addDescription" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                        <textarea name="description" id="addDescription" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-150 ease-in-out" rows="3"></textarea>
                     </div>
-                    <div>
-                        <label for="addUnits" class="block text-sm font-medium text-gray-700">Units</label>
-                        <input type="number" name="units" id="addUnits" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                    <div class="relative">
+                        <label for="addUnits" class="block text-sm font-medium text-gray-700 mb-1">Units</label>
+                        <input type="number" name="units" id="addUnits" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-150 ease-in-out">
                     </div>
-                    <div>
-                        <label for="addType" class="block text-sm font-medium text-gray-700">Type</label>
-                        <select name="type" id="addType" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                    <div class="relative">
+                        <label for="addType" class="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                        <select name="type" id="addType" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition duration-150 ease-in-out" required>
                             <option value="" disabled selected>Select Type</option>
                             <option value="Permanent">Permanent</option>
                             <option value="Part-Timer">Part-Timer</option>
@@ -131,52 +141,58 @@
                         </select>
                     </div>
                 </div>
-                <div class="mt-6 flex justify-end space-x-3">
-                    <button type="button" onclick="closeAddModal()" class="px-4 py-2 border border-gray-300 rounded-md flex items-center transition duration-300 ease-in-out transform hover:scale-105 hover:bg-gray-100">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div class="mt-8 flex justify-end space-x-4">
+                    <button type="button" onclick="closeAddModal()" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-md flex items-center transition duration-300 ease-in-out transform hover:scale-105 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                         Cancel
                     </button>
-                    <button type="submit" class="px-4 py-2 border border-transparent rounded-md bg-green-600 text-white flex items-center transition duration-300 ease-in-out transform hover:scale-105 hover:bg-green-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    <button type="submit" class="px-6 py-3 bg-green-600 text-white rounded-md flex items-center transition duration-300 ease-in-out transform hover:scale-105 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                         </svg>
-                        Add
+                        Add Clearance
                     </button>
                 </div>
             </form>
-            <div id="addNotification" class="hidden mt-2 text-green-600"></div>
+            <div id="addNotification" class="hidden mt-4 text-green-600 bg-green-100 p-3 rounded-lg border border-green-200"></div>
             
             <!-- Loader for Add Modal -->
-            <div id="addLoader" class="hidden absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
-                <div class="loader"></div>
+            <div id="addLoader" class="hidden absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 rounded-2xl">
+                <div class="loader border-t-4 border-green-500 border-solid rounded-full animate-spin h-12 w-12"></div>
             </div>
         </div>
     </div>
 
     <!-- Edit Modal -->
-    <div id="editModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
-        <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full relative">
-            <h3 class="text-2xl font-semibold mb-4 text-gray-800">Edit Clearance Checklist</h3>
-            <form id="editForm" method="POST" action="">
+    <div id="editModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-70 hidden z-50 transition-opacity duration-300">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full relative overflow-hidden duration-300 scale-95 hover:scale-100">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-400 to-indigo-500"></div>
+            <h3 class="text-3xl font-bold mb-6 text-gray-800 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-3 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                Edit Clearance Checklist
+            </h3>
+            <form id="editForm" method="POST" action="" class="space-y-6">
                 @csrf
                 <div class="space-y-4">
-                    <div>
-                        <label for="editDocumentName" class="block text-sm font-medium text-gray-700">Document Name</label>
-                        <input type="text" name="document_name" id="editDocumentName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                    <div class="relative">
+                        <label for="editDocumentName" class="block text-sm font-medium text-gray-700 mb-1">Document Name</label>
+                        <input type="text" name="document_name" id="editDocumentName" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out" required>
                     </div>
-                    <div>
-                        <label for="editDescription" class="block text-sm font-medium text-gray-700">Description</label>
-                        <textarea name="description" id="editDescription" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"></textarea>
+                    <div class="relative">
+                        <label for="editDescription" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                        <textarea name="description" id="editDescription" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out" rows="3"></textarea>
                     </div>
-                    <div>
-                        <label for="editUnits" class="block text-sm font-medium text-gray-700">Units</label>
-                        <input type="number" name="units" id="editUnits" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                    <div class="relative">
+                        <label for="editUnits" class="block text-sm font-medium text-gray-700 mb-1">Units</label>
+                        <input type="number" name="units" id="editUnits" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out">
                     </div>
-                    <div>
-                        <label for="editType" class="block text-sm font-medium text-gray-700">Type</label>
-                        <select name="type" id="editType" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+                    <div class="relative">
+                        <label for="editType" class="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                        <select name="type" id="editType" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out" required>
                             <option value="" disabled>Select Type</option>
                             <option value="Permanent">Permanent</option>
                             <option value="Part-Timer">Part-Timer</option>
@@ -184,40 +200,59 @@
                         </select>
                     </div>
                 </div>
-                <div class="mt-6 flex justify-end space-x-3">
-                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 border border-gray-300 rounded-md">Cancel</button>
-                    <button type="submit" class="px-4 py-2 border border-transparent rounded-md bg-blue-600 text-white">Save</button>
+                <div class="mt-8 flex justify-end space-x-4">
+                    <button type="button" onclick="closeEditModal()" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-md flex items-center transition duration-300 ease-in-out transform hover:scale-105 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-md flex items-center transition duration-300 ease-in-out transform hover:scale-105 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        Save Changes
+                    </button>
                 </div>
             </form>
-            <div id="editNotification" class="hidden mt-2 text-blue-600"></div>
+            <div id="editNotification" class="hidden mt-4 text-blue-600 bg-blue-100 p-3 rounded-lg border border-blue-200"></div>
             
             <!-- Loader for Edit Modal -->
-            <div id="editLoader" class="hidden absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
-                <div class="loader"></div>
+            <div id="editLoader" class="hidden absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 rounded-2xl">
+                <div class="loader border-t-4 border-blue-500 border-solid rounded-full animate-spin h-12 w-12"></div>
             </div>
         </div>
     </div>
 
      <!-- Edit Requirements Modal -->
-     <div id="editRequirementsModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
-        <div class="bg-white p-8 rounded-lg shadow-lg max-w-3xl w-full relative">
-            <h3 class="text-2xl font-semibold mb-4 text-gray-800">Edit Requirements for "<span id="modalClearanceName"></span>"</h3>
+     <div id="editRequirementsModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-70 hidden z-50 transition-opacity duration-300">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-4xl w-full relative overflow-hidden duration-300 scale-95 hover:scale-100">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-400 to-purple-500"></div>
+            <h3 class="text-3xl font-bold mb-6 text-gray-800 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-3 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                Edit Requirements for "<span id="modalClearanceName" class="text-blue-600"></span>"
+            </h3>
             
             <!-- Requirements Table -->
-            <div class="mb-4">
-                <button onclick="openAddRequirementModal()" class="mb-2 bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded">
+            <div class="mb-6">
+                <button onclick="openAddRequirementModal()" class="mb-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
                     Add Requirement
                 </button>
-                <div class="overflow-y-auto max-h-[30rem]">
-                    <table class="min-w-full text-sm border">
-                        <thead class="bg-gray-200">
+                <div class="overflow-y-auto max-h-[30rem] shadow-inner rounded-lg">
+                    <table class="min-w-full text-sm border-collapse">
+                        <thead class="bg-gray-100 sticky top-0">
                             <tr>
-                                <th class="px-4 py-2 text-left">ID</th>
-                                <th class="px-4 py-2 text-left">Requirement</th>
-                                <th class="px-4 py-2 text-left">Actions</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Requirement</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="requirementsTableBody" class="divide-y divide-gray-200">
+                        <tbody id="requirementsTableBody" class="bg-white divide-y divide-gray-200">
                             {{-- Dynamically filled via JavaScript --}}
                         </tbody>
                     </table>
@@ -229,14 +264,14 @@
             </div>
 
             <!-- Add Requirement Modal (Nested) -->
-            <div id="addRequirementModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
+            <div id="addRequirementModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden z-100">
                 <div class="bg-white p-6 rounded-lg shadow-lg max-w-xl w-full relative">
                     <h4 class="text-xl font-semibold mb-4 text-gray-800">Add Requirement</h4>
                     <form id="addRequirementForm">
                         @csrf
                         <div class="mb-4">
                             <label for="newRequirement" class="block text-sm font-medium text-gray-700">Requirement</label>
-                            <textarea id="newRequirement" name="requirement" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-40 resize-y" required></textarea>
+                            <textarea id="newRequirement" name="requirement" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm h-20 resize-y" required></textarea>
                         </div>
                         <div class="flex justify-end space-x-2">
                             <button type="button" onclick="closeAddRequirementModal()" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-200 transition duration-200 transform hover:scale-105">Cancel</button>
@@ -288,45 +323,114 @@
     </div>
 
     <!-- Share Clearance Modal -->
-    <div id="shareModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
-        <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full relative">
-            <h3 class="text-2xl font-semibold mb-4 text-green-800">Share Clearance Checklist</h3>
-            <p>Are you sure you want to share the clearance checklist: <strong id="shareClearanceName"></strong>?</p>
+    <div id="shareModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-30 backdrop-blur-sm hidden transition-opacity duration-300">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full relative overflow-hidden duration-300 scale-95 hover:scale-100">
+            <div class="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-green-400 to-blue-500"></div>
+            <h3 class="text-3xl font-bold mb-6 text-gray-800 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                </svg>
+                Share Clearance Checklist
+            </h3>
+            <p class="mb-6 text-lg text-gray-600">Are you sure you want to share the clearance checklist: <strong id="shareClearanceName" class="font-bold text-green-600"></strong>?</p>
             <form id="shareForm" method="POST">
                 @csrf
-                <div class="flex justify-end space-x-4 mt-6">
-                    <button type="button" onclick="closeShareModal()" class="px-4 py-2 border border-gray-300 rounded-md">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md">Share</button>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" onclick="closeShareModal()" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-md flex items-center transition duration-300 ease-in-out transform hover:scale-105 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-6 py-3 bg-green-600 text-white rounded-md flex items-center transition duration-300 ease-in-out transform hover:scale-105 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                        </svg>
+                        Share
+                    </button>
                 </div>
             </form>
-            <div id="shareNotification" class="hidden mt-2 text-green-600"></div>
+            <div id="shareNotification" class="hidden mt-4 text-green-600 bg-green-100 p-3 rounded-lg border border-green-200"></div>
             <!-- Loader -->
-            <div id="shareLoader" class="hidden absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
-                <div class="loader"></div>
+            <div id="shareLoader" class="hidden absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 rounded-2xl">
+                <div class="loader border-t-4 border-green-500 border-solid rounded-full animate-spin h-12 w-12"></div>
             </div>
         </div>
     </div>
 
     <!-- Delete Modal -->
-    <div id="deleteModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
-        <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full relative">
-            <h3 class="text-2xl font-semibold mb-4 text-gray-800">Confirm Deletion</h3>
-            <p class="mb-6">Are you sure you want to delete <span id="clearanceName" class="font-bold"></span>?</p>
+    <div id="deleteModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-70 hidden z-50 transition-opacity duration-300">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full relative overflow-hidden duration-300 scale-95 hover:scale-100">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-red-500 to-pink-500"></div>
+            <h3 class="text-3xl font-bold mb-6 text-gray-800 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-3 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Confirm Deletion
+            </h3>
+            <p class="mb-6 text-lg text-gray-600">Are you sure you want to delete <span id="clearanceName" class="font-bold text-red-600"></span>? This action cannot be undone.</p>
             <form id="deleteForm" method="POST" action="">
                 @csrf
                 @method('DELETE')
                 <div class="flex justify-end space-x-4">
-                    <button type="button" onclick="closeDeleteModal()" class="px-4 py-2 border border-gray-300 rounded-md">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-md">Delete</button>
+                    <button type="button" onclick="closeDeleteModal()" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-md flex items-center transition duration-300 ease-in-out transform hover:scale-105 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-6 py-3 bg-red-600 text-white rounded-md flex items-center transition duration-300 ease-in-out transform hover:scale-105 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Delete
+                    </button>
                 </div>
             </form>
-            <div id="deleteNotification" class="hidden mt-2 text-red-600 bg-red-100 p-2 rounded">
+            <div id="deleteNotification" class="hidden mt-4 text-red-600 bg-red-100 p-3 rounded-lg border border-red-200">
                 <!-- Notification message will appear here -->
             </div>
             
             <!-- Loader for Delete Modal -->
-            <div id="deleteLoader" class="hidden absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
+            <div id="deleteLoader" class="hidden absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 rounded-2xl">
                 <div class="loader"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Shared Clearances Modal ID -->
+    <div id="sharedClearancesModal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden z-50">
+        <div class="bg-white p-8 rounded-lg shadow-2xl max-w-3xl w-full relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-400 to-blue-500"></div>
+            <h3 class="text-3xl font-bold mb-6 text-gray-800 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-3 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                </svg>
+                Shared Clearances
+            </h3>
+            <div class="overflow-x-auto shadow-md rounded-lg">
+                <table class="min-w-full text-sm border-collapse">
+                    <thead class="bg-gradient-to-r from-green-400 to-blue-500 text-white">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">ID</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Document Name</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Units</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Type</th>
+                            <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sharedClearancesTableBody" class="bg-white divide-y divide-gray-200">
+                        <!-- Shared clearances will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-8 flex justify-end">
+                <button type="button" onclick="closeSharedClearancesModal()" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-md flex items-center transition duration-300 ease-in-out transform hover:scale-105 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    Close
+                </button>
             </div>
         </div>
     </div>
@@ -878,4 +982,74 @@
             });
         });
     </script>
+    <!-- Share Clearance Modal -->
+    <script>
+        function openSharedClearancesModal() {
+            fetchSharedClearances();
+            document.getElementById('sharedClearancesModal').classList.remove('hidden');
+        }
+    
+        function closeSharedClearancesModal() {
+            document.getElementById('sharedClearancesModal').classList.add('hidden');
+        }
+    
+        function fetchSharedClearances() {
+            fetch('{{ route('admin.clearance.shared') }}')
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.getElementById('sharedClearancesTableBody');
+                    tbody.innerHTML = '';
+                    data.sharedClearances.forEach(clearance => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td class="px-4 py-4 whitespace-nowrap border-b border-gray-200">${clearance.id}</td>
+                            <td class="px-4 py-4 whitespace-nowrap border-b border-gray-200">${clearance.document_name}</td>
+                            <td class="px-4 py-4 whitespace-nowrap border-b border-gray-200 text-center">${clearance.units}</td>
+                            <td class="px-4 py-4 whitespace-nowrap border-b border-gray-200">${clearance.type}</td>
+                            <td class="px-4 py-4 whitespace-nowrap border-b border-gray-200">
+                                <button onclick="removeSharedClearance(${clearance.id})" class="text-red-600 hover:text-red-800 flex items-center text-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H3a1 1 0 000 2h1v10a2 2 0 002 2h8a2 2 0 002-2V6h1a1 1 0 100-2h-2V3a1 1 0 00-1-1H6zm3 4a1 1 0 112 0v8a1 1 0 11-2 0V6z" clip-rule="evenodd" />
+                                    </svg>
+                                    Remove
+                                </button>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching shared clearances:', error);
+                    alert('An error occurred while fetching shared clearances.');
+                });
+        }
+    
+        function removeSharedClearance(id) {
+            if (!confirm('Are you sure you want to remove this shared clearance?')) {
+                return;
+            }
+    
+            fetch(`{{ route('admin.clearance.removeShared', '') }}/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    fetchSharedClearances();
+                    alert(data.message || 'Shared clearance removed successfully.');
+                } else {
+                    alert(data.message || 'Failed to remove shared clearance.');
+                }
+            })
+            .catch(error => {
+                console.error('Error removing shared clearance:', error);
+                alert('An error occurred while removing the shared clearance.');
+            });
+        }
+    </script>
+
 </x-admin-layout>
