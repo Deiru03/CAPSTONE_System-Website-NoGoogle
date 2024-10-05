@@ -114,7 +114,7 @@ class ClearanceController extends Controller
 
         // Validate the request
         $validator = Validator::make($request->all(), [
-            'files.*' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:2048', // Allow multiple files
+            'files.*' => 'required|file|mimes:pdf,doc,docx,jpg,png', // Allow multiple files
         ]);
 
         if ($validator->fails()) {

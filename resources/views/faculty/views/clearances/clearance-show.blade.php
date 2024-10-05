@@ -175,7 +175,7 @@
                         <p class="text-gray-500">Drag & drop files here or click to select files</p>
                         <input type="file" id="uploadFiles" name="files[]" multiple class="hidden">
                     </div>
-                    <p class="mt-1 text-sm text-gray-500">You can upload multiple files. Allowed types: PDF, DOC, DOCX, JPG, PNG. Max size per file: 2MB.</p>
+                    <p class="mt-1 text-sm text-gray-500">You can upload multiple files. Allowed types: PDF, DOC, DOCX, JPG, PNG. Max size per file: 100mb.</p>
                 </div>
                 <div id="uploadNotification" class="hidden bg-green-100 text-green-700 p-2 rounded"></div>
                 <div id="uploadLoader" class="hidden">Uploading...</div>

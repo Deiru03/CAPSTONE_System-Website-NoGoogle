@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use App\Views\Faculty;
-use App\Models\Clearance;
+use App\Models\UploadedClearance;
 use App\Models\UserClearance;
 class FacultyController extends Controller
 {
@@ -30,7 +29,12 @@ class FacultyController extends Controller
 
     public function myFiles(): View
     {
-        return view('faculty.views.my-files');
+        $user = Auth::user();
+
+        // Fetch all uploaded clearances for the authenticated user
+        $uploadedFiles = UploadedClearance::where('user_id', $user->id)->with('requirement')->get();
+    
+        return view('faculty.views.my-files', compact('uploadedFiles'));
     }
     public function submittedReports(): View
     {

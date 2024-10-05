@@ -102,6 +102,7 @@ Route::middleware(['auth', 'verified', 'Faculty'])->prefix('faculty')->group(fun
     //clearance view files singles
     Route::get('/clearances/{sharedClearanceId}/requirement/{requirementId}/files', [FacultyClearanceController::class, 'getUploadedFiles'])->name('faculty.clearances.getFiles');
     Route::delete('/clearances/{sharedClearanceId}/upload/{requirementId}/delete/{fileId}', [FacultyClearanceController::class, 'deleteSingleFile'])->name('faculty.clearances.deleteSingleFile');
+    Route::delete('/faculty/clearances/delete/{sharedClearanceId}/{requirementId}/{fileId}', [FacultyClearanceController::class, 'deleteSingleFile'])->name('faculty.clearances.deleteSingleFile');
 }); 
 /////////////////////////////////////////////// End of Faculty Routes ////////////////////////////////////////////////
 
