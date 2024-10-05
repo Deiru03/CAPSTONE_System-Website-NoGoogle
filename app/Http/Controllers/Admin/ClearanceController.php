@@ -8,6 +8,7 @@ use App\Models\Clearance;
 use App\Models\ClearanceRequirement;
 use App\Models\SharedClearance;
 use Illuminate\Support\Facades\DB;
+use App\Models\UserClearance;
 
 class ClearanceController extends Controller
 {
@@ -138,6 +139,12 @@ class ClearanceController extends Controller
     }
 
     ///////////////////////////////////////// Clearance Requirements ///////////////////////////////////////
+
+    public function checkClearances()
+    {
+        $userClearances = UserClearance::with(['sharedClearance.clearance', 'uploadedClearances'])->get();
+        return view('admin.views.clearances.clearance-check', compact('userClearances'));
+    }
     /**
      * Display the requirements for a specific clearance.
      */

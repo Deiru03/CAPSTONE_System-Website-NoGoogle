@@ -71,6 +71,7 @@ Route::middleware(['auth', 'verified', 'Admin'])->prefix('admin')->group(functio
         Route::delete('/delete/{requirementId}', [AdminClearanceController::class, 'destroyRequirement'])->name('admin.clearance.requirements.destroy');
     });
     Route::post('/admin/clearance/share/{id}', [AdminClearanceController::class, 'share'])->name('admin.clearance.share');
+    Route::get('/admin/clearance/check', [AdminClearanceController::class, 'checkClearances'])->name('admin.clearance.check');
 
     /////////////////////////////////////////// Shared Fetch Method and Remove Shared Clearance ///////////////////////////////////////////
     Route::get('/admin/clearance/shared', [AdminClearanceController::class, 'shared'])->name('admin.clearance.shared');

@@ -109,7 +109,8 @@ class ClearanceController extends Controller
         if ($request->hasFile('files')) {
             try {
                 foreach ($request->file('files') as $file) {
-                    $path = $file->store('uploads/faculty_clearances', 'public');
+                    $originalName = $file->getClientOriginalName();
+                    $path = $file->storeAs('uploads/faculty_clearances', $originalName, 'public');
 
                     // Create a new UploadedClearance record for each file
                     UploadedClearance::create([
@@ -140,6 +141,7 @@ class ClearanceController extends Controller
             'message' => 'No files uploaded.',
         ], 400);
     }
+    
 
     public function deleteFile($sharedClearanceId, $requirementId)
     {
