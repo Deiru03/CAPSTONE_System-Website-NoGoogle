@@ -1,4 +1,61 @@
-<x-app-layout>
+ <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+        <!-- Scripts -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <script src="//unpkg.com/alpinejs" defer></script>
+@if(isset($userClearance) && $userClearance)
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4f46e5; /* Indigo color */
+            color: white;
+        }
+
+        td {
+            vertical-align: middle;
+        }
+
+        button {
+            padding: 6px 12px;
+            font-size: 14px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        button.upload {
+            background-color: #3b82f6; /* Blue */
+            color: white;
+        }
+
+        button.delete {
+            background-color: #ef4444; /* Red */
+            color: white;
+        }
+
+        button.view-uploads {
+            background-color: #10b981; /* Green */
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        button svg {
+            margin-right: 4px;
+        }
+    </style>
     <div class="container mx-auto px-4 py-8 bg-gray-100 rounded-lg shadow-md">
         <h2 class="text-3xl mb-6 text-black border-b-2 border-black pb-2">
             <span>Clearance Checklist:</span>
@@ -40,7 +97,7 @@
                         <th class="py-2 px-3 text-left">ID</th>
                         <th class="py-2 px-3 text-left">Requirement</th>
                         <th class="py-2 px-3 text-left">Status</th>
-                        <th class="py-2 px-3 text-left">Actions</th>
+                        <th class="py-2 px-3 text-left text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -57,7 +114,7 @@
                         </td>
                         <td class="border-t px-3 py-2">
                             @if($userClearance->uploadedClearanceFor($requirement->id))
-                                <div class="flex flex-col space-y-1">
+                                <div class="flex justify-center space-x-1">
                                     <div class="flex space-x-1">
                                         <button 
                                             onclick="openUploadModal({{ $userClearance->shared_clearance_id }}, {{ $requirement->id }})" 
@@ -76,16 +133,17 @@
                                             <span>Delete</span>
                                         </button>
                                     </div>
-                                    <button 
-                                        onclick="viewFilesModal({{ $userClearance->shared_clearance_id }}, {{ $requirement->id }})" 
-                                        class="bg-green-500 hover:bg-green-600 text-white px-0 py-0 rounded-full transition-colors duration-200 text-xs font-semibold flex items-center justify-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
-                                        <span>View Uploads</span>
-                                    </button>
-                                </div>
+                                    <div class="flex justify-center space-x-1">
+                                        <button style="width: 108px;"
+                                            onclick="viewFilesModal({{ $userClearance->shared_clearance_id }}, {{ $requirement->id }})" 
+                                            class="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded-full transition-colors duration-200 text-xs font-semibold flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            </svg>
+                                            <span>View Uploads</span>
+                                        </button>
+                                    </div>
                             @else
                                 <div class="flex justify-center">
                                     <button 
@@ -149,6 +207,22 @@
             </div>
         </div>
     </div>
+@else
+    <div class="container mx-auto px-8 py-12">
+        <div class="text-center">
+            <i class="fas fa-file-alt text-6xl text-indigo-500 mb-6"></i>
+            <h2 class="text-4xl font-bold mb-4 text-indigo-800">
+                No Clearances Available
+            </h2>
+            <p class="text-xl text-gray-700 mb-8">
+                It looks like you haven't obtained a copy of your clearance yet.
+            </p>
+            <a href="{{ route('faculty.clearances.index') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
+                Get Your Clearance
+            </a>
+        </div>
+    </div>
+@endif
 
     <script>
         /**
@@ -424,4 +498,10 @@
             }
         });
     </script>
-</x-app-layout>
+    <script>
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+    </script>

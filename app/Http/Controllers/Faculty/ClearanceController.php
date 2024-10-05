@@ -57,6 +57,26 @@ class ClearanceController extends Controller
 
         return redirect()->route('faculty.clearances.index')->with('success', 'Clearance copied successfully.');
     }
+    public function removeCopy($id)
+    {
+        $user = Auth::user();
+
+        try {
+            // Find the user's clearance copy
+            $userClearance = UserClearance::where('shared_clearance_id', $id)
+                ->where('user_id', $user->id)
+                ->firstOrFail();
+
+            // Delete the user's clearance copy
+            $userClearance->delete();
+
+            return redirect()->route('faculty.clearances.index')->with('success', 'Clearance copy removed successfully.');
+        } catch (\Exception $e) {
+            Log::error('Removing Clearance Copy Error: '.$e->getMessage());
+
+            return redirect()->route('faculty.clearances.index')->with('error', 'Failed to remove clearance copy.');
+        }
+    }
     /**
      * Display the specified shared clearance and its requirements.
      */

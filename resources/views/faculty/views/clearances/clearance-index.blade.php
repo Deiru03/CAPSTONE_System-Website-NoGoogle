@@ -43,9 +43,15 @@
                         <td class="border px-4 py-2">{{ $sharedClearance->clearance->type }}</td>
                         <td class="border px-4 py-2 flex justify-center">
                             @if(array_key_exists($sharedClearance->id, $userClearances))
-                                <a href="{{ route('faculty.clearances.show', $userClearances[$sharedClearance->id]) }}" class="bg-blue-500 text-white px-3 py-1 rounded">
+                                <a href="{{ route('faculty.clearances.show', $userClearances[$sharedClearance->id]) }}" class="bg-blue-500 text-white px-3 py-1 rounded" onclick="event.preventDefault(); window.location.href='{{ route('faculty.views.clearances', $userClearances[$sharedClearance->id]) }}';">
                                     View
                                 </a>
+                                <form action="{{ route('faculty.clearances.removeCopy', $sharedClearance->id) }}" method="POST" class="inline ml-2">
+                                    @csrf
+                                    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">
+                                        Remove Copy
+                                    </button>
+                                </form>
                             @else
                                 <form action="{{ route('faculty.clearances.getCopy', $sharedClearance->id) }}" method="POST" class="inline">
                                     @csrf
