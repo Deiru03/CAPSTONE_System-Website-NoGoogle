@@ -20,6 +20,7 @@
                                 <tr>
                                     <th class="py-2 px-4 border-b">File Name</th>
                                     <th class="py-2 px-4 border-b">Requirement</th>
+                                    <th class="py-2 px-4 border-b">Uploaded Date</th>
                                     <th class="py-2 px-4 border-b">Actions</th>
                                 </tr>
                             </thead>
@@ -28,6 +29,7 @@
                                     <tr>
                                         <td class="py-2 px-4 border-b">{{ basename($file->file_path) }}</td>
                                         <td class="py-2 px-4 border-b">{{ $file->requirement->requirement ?? 'N/A' }}</td>
+                                        <td class="py-2 px-4 border-b">{{ $file->created_at->format('Y-m-d H:i') }}</td>
                                         <td class="py-2 px-4 border-b">
                                             <a href="{{ Storage::url($file->file_path) }}" target="_blank" class="text-blue-500 hover:underline">View</a>
                                             <form action="{{ route('faculty.clearances.deleteSingleFile', [$file->shared_clearance_id, $file->requirement_id, $file->id]) }}" method="POST" class="inline">

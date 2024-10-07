@@ -32,14 +32,19 @@ class FacultyController extends Controller
         $user = Auth::user();
 
         // Fetch all uploaded clearances for the authenticated user
-        $uploadedFiles = UploadedClearance::where('user_id', $user->id)->with('requirement')->get();
-    
+        $uploadedFiles = UploadedClearance::where('user_id', $user->id)
+            ->with('requirement')
+            ->select('id', 'shared_clearance_id', 'requirement_id', 'user_id', 'file_path', 'created_at', 'updated_at')
+            ->get();
+
         return view('faculty.views.my-files', compact('uploadedFiles'));
     }
+
     public function submittedReports(): View
     {
         return view('faculty.views.submitted-reports');
     }   
+    
     public function test(): View
     {
         return view('faculty.views.test-page');

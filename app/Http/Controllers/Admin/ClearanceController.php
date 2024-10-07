@@ -139,11 +139,24 @@ class ClearanceController extends Controller
     }
 
     ///////////////////////////////////////// Clearance Requirements ///////////////////////////////////////
-
+    public function showUserClearance($id)
+    {
+        $userClearance = UserClearance::with(['sharedClearance.clearance.requirements', 'uploadedClearances'])->findOrFail($id);
+        return view('admin.views.clearances.user-clearance-details', compact('userClearance'));
+    }
+    
     public function checkClearances()
     {
-        $userClearances = UserClearance::with(['sharedClearance.clearance', 'uploadedClearances'])->get();
+        $userClearances = UserClearance::with(['sharedClearance.clearance', 'user'])->get();
         return view('admin.views.clearances.clearance-check', compact('userClearances'));
+    }
+
+    public function approveClearance($id)
+    {
+        $userClearance = UserClearance::find($id);
+        $userClearance->status = 'Approved';
+        $userClearance->save();
+        
     }
     /**
      * Display the requirements for a specific clearance.

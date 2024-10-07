@@ -15,26 +15,19 @@
                             <thead>
                                 <tr>
                                     <th class="py-2 px-3 text-left">User ID</th>
+                                    <th class="py-2 px-3 text-left">User Name</th>
                                     <th class="py-2 px-3 text-left">Document Name</th>
-                                    <th class="py-2 px-3 text-left">Uploaded Files</th>
                                     <th class="py-2 px-3 text-left">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($userClearances as $userClearance)
                                     <tr>
-                                        <td class="border px-4 py-2">{{ $userClearance->user_id }}</td>
+                                        <td class="border px-4 py-2">{{ $userClearance->user->id }}</td>
+                                        <td class="border px-4 py-2">{{ $userClearance->user->name }}</td>
                                         <td class="border px-4 py-2">{{ $userClearance->sharedClearance->clearance->document_name }}</td>
                                         <td class="border px-4 py-2">
-                                            @foreach($userClearance->uploadedClearances as $uploaded)
-                                                <a href="{{ asset('storage/' . $uploaded->file_path) }}" target="_blank" class="text-blue-500 hover:underline">
-                                                    {{ basename($uploaded->file_path) }}
-                                                </a><br>
-                                            @endforeach
-                                        </td>
-                                        <td class="border px-4 py-2">
-                                            <button class="bg-green-500 text-white px-3 py-1 rounded">Approve</button>
-                                            <button class="bg-red-500 text-white px-3 py-1 rounded">Reject</button>
+                                            <a href="{{ route('admin.clearances.show', $userClearance->id) }}" class="bg-blue-500 text-white px-3 py-1 rounded">View Details</a>
                                         </td>
                                     </tr>
                                 @endforeach
