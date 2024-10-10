@@ -17,6 +17,7 @@ class CreateUploadedClearancesTable extends Migration
             $table->unsignedBigInteger('requirement_id');
             $table->unsignedBigInteger('user_id');
             $table->string('file_path');
+            $table->string('status'); // Add this line for the status column
             $table->timestamps();
             
 

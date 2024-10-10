@@ -141,7 +141,11 @@ class ClearanceController extends Controller
     ///////////////////////////////////////// Clearance Requirements ///////////////////////////////////////
     public function showUserClearance($id)
     {
-        $userClearance = UserClearance::with(['sharedClearance.clearance.requirements', 'uploadedClearances'])->findOrFail($id);
+        $userClearance = UserClearance::with([
+            'sharedClearance.clearance.requirements',
+            'uploadedClearances',
+            'user' // Added to include user data
+        ])->findOrFail($id);
         return view('admin.views.clearances.user-clearance-details', compact('userClearance'));
     }
     
