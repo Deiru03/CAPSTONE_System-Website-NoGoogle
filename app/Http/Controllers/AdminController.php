@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Models\Clearance;
 /////////////////////////////////////////////// Admin ViewsController ////////////////////////////////////////////////
 class AdminController extends Controller
 {
@@ -22,10 +23,13 @@ class AdminController extends Controller
         $clearanceComplete = User::where('clearances_status', 'complete')->count();
         $clearanceReturn = User::where('clearances_status', 'return')->count();
         $clearanceTotal = $clearancePending + $clearanceComplete + $clearanceReturn;
+        $clearanceChecklist = Clearance::count();
         //////////////////////// Faculty Counts //////////////////////////
         $facultyPermanent = User::where('position', 'Permanent')->count();
         $facultyTemporary = User::where('position', 'Temporary')->count();
         $facultyPartTime = User::where('position', 'Part-Timer')->count();
+        $facultyAdmin = User::where('user_type', 'Admin')->count();
+        $facultyFaculty = User::where('user_type', 'Faculty')->count();
 
         if (Auth::check() && Auth::user()->user_type === 'Faculty') {
             return view('dashboard');
@@ -33,7 +37,8 @@ class AdminController extends Controller
         //////////////////////// Dashboard Throw Variables //////////////////////////
         return view('admindashboard', compact('TotalUser', 'clearancePending',
          'clearanceComplete', 'clearanceReturn', 'clearanceTotal',
-         'facultyPermanent', 'facultyTemporary', 'facultyPartTime' ));
+         'facultyPermanent', 'facultyTemporary', 'facultyPartTime',
+         'facultyAdmin', 'facultyFaculty', 'clearanceChecklist' ));
     }
 
     public function clearances(Request $request): View
