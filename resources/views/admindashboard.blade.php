@@ -95,28 +95,7 @@
 
             <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
                 {{-- 
-                <!-- Overall Analytics -->
-                <div class="bg-white p-6 rounded-lg shadow-lg col-span-2">
-                    <h3 class="text-xl font-bold mb-4">Overall Analytics</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="bg-blue-100 p-4 rounded-lg text-center">
-                            <div class="text-3xl font-bold text-blue-600">{{ $TotalUser }}</div>
-                            <div class="text-sm text-gray-600">Total Users</div>
-                        </div>
-                        <div class="bg-green-100 p-4 rounded-lg text-center">
-                            <div class="text-3xl font-bold text-green-600">{{ $clearanceTotal }}</div>
-                            <div class="text-sm text-gray-600">Total Clearances</div>
-                        </div>
-                        <div class="bg-yellow-100 p-4 rounded-lg text-center">
-                            <div class="text-3xl font-bold text-yellow-600">{{ $clearanceChecklist }}</div>
-                            <div class="text-sm text-gray-600">Clearance Checklists</div>
-                        </div>
-                        <div class="bg-purple-100 p-4 rounded-lg text-center">
-                            <div class="text-3xl font-bold text-purple-600">{{ $facultyAdmin + $facultyFaculty }}</div>
-                            <div class="text-sm text-gray-600">Total Faculty</div>
-                        </div>
-                    </div>
-                </div>
+         
                     --}}
                 <!-- Clearance Status -->
                 <div class="bg-white p-6 rounded-lg shadow-lg">
@@ -222,6 +201,29 @@
                         <div class="flex justify-between mt-2 text-sm text-gray-600">
                             <span>{{ number_format($adminPercentage, 1) }}% Admin</span>
                             <span>{{ number_format(100 - $adminPercentage, 1) }}% Faculty</span>
+                        </div>
+                    </div>
+                </div>
+
+                    <!-- Overall Analytics -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg col-span-2">
+                    <h3 class="text-xl font-bold mb-4">Overall Analytics</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-blue-100 p-4 rounded-lg text-center">
+                            <div class="text-3xl font-bold text-blue-600">{{ $TotalUser }}</div>
+                            <div class="text-sm text-gray-600">Total Users</div>
+                        </div>
+                        <div class="bg-green-100 p-4 rounded-lg text-center">
+                            <div class="text-3xl font-bold text-green-600">{{ $clearanceTotal }}</div>
+                            <div class="text-sm text-gray-600">Total Clearances</div>
+                        </div>
+                        <div class="bg-yellow-100 p-4 rounded-lg text-center">
+                            <div class="text-3xl font-bold text-yellow-600">{{ $clearanceChecklist }}</div>
+                            <div class="text-sm text-gray-600">Clearance Checklists</div>
+                        </div>
+                        <div class="bg-purple-100 p-4 rounded-lg text-center">
+                            <div class="text-3xl font-bold text-purple-600">{{ $facultyAdmin + $facultyFaculty }}</div>
+                            <div class="text-sm text-gray-600">Total Faculty</div>
                         </div>
                     </div>
                 </div>
