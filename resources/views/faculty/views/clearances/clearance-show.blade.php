@@ -94,7 +94,7 @@
             <table class="min-w-full bg-white rounded-lg overflow-hidden shadow-lg text-sm">
                 <thead class="bg-indigo-600 text-white">
                     <tr>
-                        <th class="py-2 px-3 text-left">ID</th>
+                        <th class="py-2 px-3 text-left hidden">ID</th>
                         <th class="py-2 px-3 text-left">Requirement</th>
                         <th class="py-2 px-3 text-left">Status</th>
                         <th class="py-2 px-3 text-left text-center">Actions</th>
@@ -103,7 +103,7 @@
                 <tbody>
                     @foreach($userClearance->sharedClearance->clearance->requirements as $requirement)
                     <tr class="hover:bg-gray-50 transition-colors duration-200">
-                        <td class="border-t px-3 py-2">{{ $requirement->id }}</td>
+                        <td class="border-t px-3 py-2 hidden">{{ $requirement->id }}</td>
                         <td class="border-t px-3 py-2">{{ $requirement->requirement }}</td>
                         <td class="border-t px-3 py-2">
                             @if($userClearance->uploadedClearanceFor($requirement->id))

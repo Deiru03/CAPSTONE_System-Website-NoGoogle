@@ -13,9 +13,9 @@ class UploadedClearance extends Model
         'shared_clearance_id',
         'requirement_id',
         'user_id',
-        'file_path'
+        'file_path',
+        'status'
     ];
-
     
     /**
      * Get the shared clearance associated with the upload.

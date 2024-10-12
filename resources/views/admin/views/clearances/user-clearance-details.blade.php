@@ -25,9 +25,9 @@
                             <thead>
                                 <tr>
                                     <th class="py-2 px-3 text-left">Requirement</th>
-                                    <th class="py-2 px-3 text-left">Status</th>
-                                    <th class="py-2 px-3 text-left">Uploaded Files</th>
-                                    <th class="py-2 px-3 text-left">Status</th>
+                                    <th class="py-2 px-3 text-center">Upload Status</th>
+                                    <th class="py-2 px-3 text-center">Uploaded Files</th>
+                                    <th class="py-2 px-3 text-center">Signature Status</th>
                                     <th class="py-2 px-3 text-left">Action</th>
                                 </tr>
                             </thead>
@@ -39,7 +39,9 @@
                                             @if($userClearance->uploadedClearanceFor($requirement->id))
                                                 <span class="text-green-500">Uploaded</span>
                                             @else
-                                                <span class="text-red-500">Pending</span>
+                                            <div class="w-full flex justify-center text-center">
+                                                <span class="text-red-500 text-center">No Attachment File</span>
+                                            </div>
                                             @endif
                                         </td>
                                         <td class="border px-4 py-2">
@@ -65,13 +67,18 @@
                                             @endforeach
                                         </td>--}} <!-- Pang DEBUG lng sa lahat ng user Overall Upload -->
                                         <td class="border px-4 py-2">
-                                            <form action="{{ route('admin.clearances.approve', $userClearance->id) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="text-green-500 hover:text-green-700">Approve</button>
-                                            </form>
+                                        @if($userClearance->uploadedClearanceFor($requirement->id) && $userClearance->uploadedClearanceFor($requirement->id)->status == 'signed')
+                                            <span class="text-green-500">Signed</span>
+                                        @else
+                                            <div class="w-full flex justify-center text-center">
+                                                <span class="text-red-500">On Check</span>
+                                            </div>
+                                        @endif
                                         </td>
                                         <td class="border px-4 py-2">
-                                            
+                                            <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full transition-colors duration-200 text-xs font-semibold">
+                                                Actions Document
+                                            </button>
                                         </td>
                                     </tr>
                                 @endforeach

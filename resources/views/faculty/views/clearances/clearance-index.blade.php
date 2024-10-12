@@ -22,6 +22,12 @@
         @if($sharedClearances->isEmpty())
             <p>No clearances have been shared with you yet.</p>
         @else
+            @php
+                // Convert userClearances array to a collection
+                $userClearancesCollection = collect($userClearances);
+                // Check if the user already has any copy
+                $hasAnyCopy = $userClearancesCollection->isNotEmpty();
+            @endphp
             <table class="min-w-full bg-white">
                 <thead>
                     <tr>
@@ -41,25 +47,28 @@
                         <td class="border px-4 py-2">{{ Str::limit($sharedClearance->clearance->description, 50) }}</td>
                         <td class="border px-4 py-2">{{ $sharedClearance->clearance->units }}</td>
                         <td class="border px-4 py-2">{{ $sharedClearance->clearance->type }}</td>
-                        <td class="border px-4 py-2 flex justify-center">
-                            @if(array_key_exists($sharedClearance->id, $userClearances))
-                                <a href="{{ route('faculty.clearances.show', $userClearances[$sharedClearance->id]) }}" class="bg-blue-500 text-white px-3 py-1 rounded" onclick="event.preventDefault(); window.location.href='{{ route('faculty.views.clearances', $userClearances[$sharedClearance->id]) }}';">
-                                    View
-                                </a>
-                                <form action="{{ route('faculty.clearances.removeCopy', $sharedClearance->id) }}" method="POST" class="inline ml-2">
-                                    @csrf
-                                    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">
-                                        Remove Copy
+                        <td class="border px-4 py-2">
+                            <div class="flex justify-center space-x-2">
+                                @if(isset($userClearances[$sharedClearance->id]))
+                                    <a href="{{ route('faculty.clearances.show', $userClearances[$sharedClearance->id]) }}" 
+                                       class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 text-sm rounded-md transition duration-300 ease-in-out flex items-center"
+                                       onclick="event.preventDefault(); window.location.href='{{ route('faculty.views.clearances', $userClearances[$sharedClearance->id]) }}';">
+                                        View
+                                    </a>
+                                    <button onclick="openModal('{{ $sharedClearance->id }}')" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 text-sm rounded-md transition duration-300 ease-in-out flex items-center">
+                                        Remove
                                     </button>
-                                </form>
-                            @else
-                                <form action="{{ route('faculty.clearances.getCopy', $sharedClearance->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded">
-                                        Get a Copy
-                                    </button>
-                                </form>
-                            @endif
+                                @else
+                                    @if(!$hasAnyCopy)
+                                        <form action="{{ route('faculty.clearances.getCopy', $sharedClearance->id) }}" method="POST" class="inline">
+                                            @csrf
+                                            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 text-sm rounded-md transition duration-300 ease-in-out flex items-center">
+                                                Get Copy
+                                            </button>
+                                        </form>
+                                    @endif
+                                @endif
+                            </div>
                         </td>
                     </tr>
                     @endforeach
@@ -67,4 +76,33 @@
             </table>
         @endif
     </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg p-6 w-1/3">
+            <h3 class="text-lg font-semibold mb-4">Confirm Removal</h3>
+            <p>Are you sure you want to remove this clearance?</p>
+            <div class="flex justify-end mt-4">
+                <button id="cancelButton" class="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded-md mr-2" onclick="closeModal()">Cancel</button>
+                <form id="removeForm" method="POST" class="inline">
+                    @csrf
+                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md">Remove</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentClearanceId = null;
+
+        function openModal(clearanceId) {
+            currentClearanceId = clearanceId;
+            document.getElementById('confirmationModal').classList.remove('hidden');
+            document.getElementById('removeForm').action = `/faculty/clearances/remove-copy/${clearanceId}`; // Update the form action
+        }
+
+        function closeModal() {
+            document.getElementById('confirmationModal').classList.add('hidden');
+        }
+    </script>
 </x-app-layout>
