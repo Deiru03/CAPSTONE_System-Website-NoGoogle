@@ -97,6 +97,7 @@
                         <th class="py-2 px-3 text-left hidden">ID</th>
                         <th class="py-2 px-3 text-left">Requirement</th>
                         <th class="py-2 px-3 text-left">Status</th>
+                        <th class="py-2 px-3 text-left">Feedback</th>
                         <th class="py-2 px-3 text-left text-center">Actions</th>
                     </tr>
                 </thead>
@@ -110,6 +111,24 @@
                                 <span class="px-2 py-1 bg-green-200 text-green-800 rounded-full text-xs font-semibold">Uploaded</span>
                             @else
                                 <span class="px-2 py-1 bg-red-200 text-red-800 rounded-full text-xs font-semibold">Pending</span>
+                            @endif
+                        </td>
+                        <td class="border-t px-3 py-2">
+                            @php
+                                $hasFeedback = false;
+                            @endphp
+                            @foreach($userClearance->uploadedClearances as $uploaded)
+                                @foreach($uploaded->feedback as $feedback)
+                                    <div class="bg-yellow-100 text-yellow-800 p-4 rounded-lg mb-4 shadow-sm border-l-4 border-yellow-500">
+                                        <p><strong>Feedback:</strong> {{ $feedback->message }}</p>
+                                    </div>
+                                    @php
+                                        $hasFeedback = true;
+                                    @endphp
+                                @endforeach
+                            @endforeach
+                            @if(!$hasFeedback)
+                                <p class="text-gray-500 italic">No comments yet.</p>
                             @endif
                         </td>
                         <td class="border-t px-3 py-2">

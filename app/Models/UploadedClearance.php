@@ -40,4 +40,9 @@ class UploadedClearance extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function feedback()
+    {
+        return $this->hasMany(ClearanceFeedback::class);
+    }
 }

@@ -20,22 +20,23 @@
                     </div>
 
                     <h3 class="text-2xl font-semibold mb-4">{{ $userClearance->sharedClearance->clearance->document_name }}</h3>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full bg-white">
-                            <thead>
+                    <div class="overflow-x-auto shadow-md rounded-lg">
+                        <table class="min-w-full bg-white border border-gray-200">
+                            <thead class="bg-gray-100">
                                 <tr>
-                                    <th class="py-2 px-3 text-left">Requirement</th>
-                                    <th class="py-2 px-3 text-center">Upload Status</th>
-                                    <th class="py-2 px-3 text-center">Uploaded Files</th>
-                                    <th class="py-2 px-3 text-center">Signature Status</th>
-                                    <th class="py-2 px-3 text-left">Action</th>
+                                    <th class="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Requirement</th>
+                                    <!--<th class="py-2 px-3 text-center">Upload Status</th>-->
+                                    <th class="py-3 px-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Uploaded Files</th>
+                                    <th class="py-3 px-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Signature Status</th>
+                                    <th class="py-3 px-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Feedback</th>
+                                    <th class="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="divide-y divide-gray-200">
                                 @foreach($userClearance->sharedClearance->clearance->requirements as $requirement)
-                                    <tr>
-                                        <td class="border px-4 py-2">{{ $requirement->requirement }}</td>
-                                        <td class="border px-4 py-2">
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-4 py-3">{{ $requirement->requirement }}</td>
+                                       {{-- <td class="border px-4 py-2">
                                             @if($userClearance->uploadedClearanceFor($requirement->id))
                                                 <span class="text-green-500">Uploaded</span>
                                             @else
@@ -43,15 +44,15 @@
                                                 <span class="text-red-500 text-center">No Attachment File</span>
                                             </div>
                                             @endif
-                                        </td>
-                                        <td class="border px-4 py-2">
+                                        </td> --}}
+                                        <td class="px-4 py-3">
                                             @foreach($userClearance->uploadedClearances->where('user_id', $userClearance->user->id) as $uploaded)
                                                 @if($uploaded->requirement_id == $requirement->id)
-                                                    <div class="flex items-center space-x-2">
-                                                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <div class="flex items-center justify-center space-x-2">
+                                                        <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v16h16V8l-6-6H4zm2 2h8v4h4v10H6V6z"></path>
                                                         </svg>
-                                                        <a href="{{ asset('storage/' . $uploaded->file_path) }}" target="_blank" class="text-blue-500 hover:underline">
+                                                        <a href="{{ asset('storage/' . $uploaded->file_path) }}" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline text-sm">
                                                             {{ basename($uploaded->file_path) }}
                                                         </a>
                                                     </div>
@@ -66,17 +67,33 @@
                                                 @endif
                                             @endforeach
                                         </td>--}} <!-- Pang DEBUG lng sa lahat ng user Overall Upload -->
-                                        <td class="border px-4 py-2">
+                                        <td class="px-4 py-3 text-center">
                                         @if($userClearance->uploadedClearanceFor($requirement->id) && $userClearance->uploadedClearanceFor($requirement->id)->status == 'signed')
-                                            <span class="text-green-500">Signed</span>
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Signed</span>
                                         @else
-                                            <div class="w-full flex justify-center text-center">
-                                                <span class="text-red-500">On Check</span>
-                                            </div>
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">On Check</span>
                                         @endif
                                         </td>
-                                        <td class="border px-4 py-2">
-                                            <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full transition-colors duration-200 text-xs font-semibold">
+                                        <td class="px-4 py-3">
+                                            @php
+                                                $hasFeedback = false;
+                                            @endphp
+                                            @foreach($userClearance->uploadedClearances as $uploaded)
+                                                @foreach($uploaded->feedback as $feedback)
+                                                    <div class="bg-yellow-100 text-yellow-800 p-3 rounded-md mb-2 shadow-sm border-l-4 border-yellow-500 text-sm">
+                                                        <p><strong>Feedback:</strong> {{ $feedback->message }}</p>
+                                                    </div>
+                                                    @php
+                                                        $hasFeedback = true;
+                                                    @endphp
+                                                @endforeach
+                                            @endforeach
+                                            @if(!$hasFeedback)
+                                                <div class="text-gray-500 italic text-sm">No comments yet.</div>
+                                            @endif
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full transition-colors duration-200 text-xs font-semibold shadow-sm">
                                                 Actions Document
                                             </button>
                                         </td>
@@ -89,4 +106,5 @@
             </div>
         </div>
     </div>
+    
 </x-admin-layout>

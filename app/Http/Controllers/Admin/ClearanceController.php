@@ -143,7 +143,7 @@ class ClearanceController extends Controller
     {
         $userClearance = UserClearance::with([
             'sharedClearance.clearance.requirements',
-            'uploadedClearances',
+            'uploadedClearances.feedback',
             'user' // Added to include user data
         ])->findOrFail($id);
         return view('admin.views.clearances.user-clearance-details', compact('userClearance'));
