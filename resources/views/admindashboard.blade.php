@@ -175,7 +175,7 @@
 
                 <!-- User Type Distribution -->
                 <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <h3 class="text-xl font-bold mb-4">User Types Distribution</h3>
+                    <h3 class="text-xl font-bold mb-4">User Types</h3>
                     <div class="flex items-center justify-center space-x-8 mb-6">
                         <div class="text-center">
                             <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-blue-100 text-blue-600 text-2xl font-bold mb-2">
